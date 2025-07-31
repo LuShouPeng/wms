@@ -14,7 +14,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [activeModule, setActiveModule] = useState('dashboard');
-  const [activeSubModule, setActiveSubModule] = useState(null);
+  const [activeSubModule, setActiveSubModule] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -89,13 +89,19 @@ export default function App() {
   const renderActiveModule = () => {
     switch (activeModule) {
       case 'dashboard':
-        return <Dashboard user={currentUser} onModuleChange={handleModuleChange} />;
+        return (
+          <Dashboard
+            user={currentUser}
+            activeSubModule={activeSubModule || undefined}
+            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
+          />
+        );
       
       case 'warehouse':
         return (
           <WarehouseManagement 
             user={currentUser} 
-            activeSubModule={activeSubModule}
+            activeSubModule={activeSubModule || undefined}
             onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
           />
         );
@@ -104,7 +110,7 @@ export default function App() {
         return (
           <BusinessManagement 
             user={currentUser}
-            activeSubModule={activeSubModule}
+            activeSubModule={activeSubModule || undefined}
             onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
           />
         );
@@ -131,7 +137,13 @@ export default function App() {
         );
       
       default:
-        return <Dashboard user={currentUser} onModuleChange={handleModuleChange} />;
+        return (
+          <Dashboard
+            user={currentUser}
+            activeSubModule={activeSubModule || undefined}
+            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
+          />
+        );
     }
   };
 

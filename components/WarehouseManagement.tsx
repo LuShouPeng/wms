@@ -44,10 +44,42 @@ import {
   Eye
 } from 'lucide-react';
 import { DamageManagement } from './DamageManagement';
+import { mockProducts } from '../constants/mockData';
 
-export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }) {
+export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }: { user?: any; activeSubModule?: string; onSubModuleChange?: (module: string) => void }) {
   const [activeTab, setActiveTab] = useState(activeSubModule || 'inbound');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Form state for inbound management
+  const [inboundForm, setInboundForm] = useState({
+    supplier: '',
+    warehouse: '',
+    remark: '',
+    items: mockProducts.map(product => ({ ...product, quantity: 0 }))
+  });
+  
+  // Form state for outbound management
+  const [outboundForm, setOutboundForm] = useState({
+    department: '',
+    warehouse: '',
+    remark: '',
+    items: mockProducts.map(product => ({ ...product, quantity: 0 }))
+  });
+  
+  // Form state for transfer management
+  const [transferForm, setTransferForm] = useState({
+    fromWarehouse: '',
+    toWarehouse: '',
+    remark: '',
+    items: mockProducts.map(product => ({ ...product, quantity: 0 }))
+  });
+  
+  // Form state for inventory management
+  const [inventoryForm, setInventoryForm] = useState({
+    warehouse: '',
+    remark: '',
+    items: mockProducts.map(product => ({ ...product, systemQuantity: 100, actualQuantity: 0, difference: 0 }))
+  });
 
   // 当activeSubModule改变时，更新activeTab
   React.useEffect(() => {
@@ -57,7 +89,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
   }, [activeSubModule]);
 
   // 当tab改变时，通知父组件
-  const handleTabChange = (value) => {
+  const handleTabChange = (value: string) => {
     setActiveTab(value);
     if (onSubModuleChange) {
       onSubModuleChange(value);
@@ -140,8 +172,8 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
     }
   ];
 
-  const getStatusBadge = (status) => {
-    const statusMap = {
+  const getStatusBadge = (status: string) => {
+    const statusMap: Record<string, { label: string; variant: any }> = {
       completed: { label: '已完成', variant: 'success' },
       pending: { label: '待处理', variant: 'warning' },
       processing: { label: '处理中', variant: 'info' },
@@ -150,46 +182,422 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
     return statusMap[status] || { label: status, variant: 'default' };
   };
 
-  const InboundForm = () => (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="supplier">供应商</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="选择供应商" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="supplier1">供应商A</SelectItem>
-              <SelectItem value="supplier2">供应商B</SelectItem>
-              <SelectItem value="supplier3">供应商C</SelectItem>
-            </SelectContent>
-          </Select>
+  const InboundForm = () => {
+    const handleInputChange = (field: string, value: string) => {
+      setInboundForm(prev => ({ ...prev, [field]: value }));
+    };
+    
+    const handleItemQuantityChange = (index: number, quantity: number) => {
+      setInboundForm(prev => {
+        const newItems = [...prev.items];
+        newItems[index] = { ...newItems[index], quantity };
+        return { ...prev, items: newItems };
+      });
+    };
+    
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      // Here you would typically send the data to your backend
+      console.log('Inbound form submitted:', inboundForm);
+      // Reset form or close dialog
+    };
+    
+    return (
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="supplier">供应商</Label>
+            <Select value={inboundForm.supplier} onValueChange={(value) => handleInputChange('supplier', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择供应商" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="supplier1">供应商A</SelectItem>
+                <SelectItem value="supplier2">供应商B</SelectItem>
+                <SelectItem value="supplier3">供应商C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="warehouse">入库仓库</Label>
+            <Select value={inboundForm.warehouse} onValueChange={(value) => handleInputChange('warehouse', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择仓库" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="warehouse1">仓库A</SelectItem>
+                <SelectItem value="warehouse2">仓库B</SelectItem>
+                <SelectItem value="warehouse3">仓库C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="warehouse">入库仓库</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="选择仓库" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="warehouse1">仓库A</SelectItem>
-              <SelectItem value="warehouse2">仓库B</SelectItem>
-              <SelectItem value="warehouse3">仓库C</SelectItem>
-            </SelectContent>
-          </Select>
+        
+        {/* 物料选择表格 */}
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="w-16 text-center">#</TableHead>
+                <TableHead className="w-24">物料编码</TableHead>
+                <TableHead className="w-40">物料名称</TableHead>
+                <TableHead className="w-24">类别</TableHead>
+                <TableHead className="w-16">单位</TableHead>
+                <TableHead className="w-24">数量</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {inboundForm.items.map((item, index) => (
+                <TableRow key={item.code} className="hover:bg-gray-50">
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                  <TableCell className="font-mono">{item.code}</TableCell>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.unit}</TableCell>
+                  <TableCell>
+                    <Input
+                      type="number"
+                      placeholder="数量"
+                      className="w-full"
+                      min="0"
+                      value={item.quantity || ''}
+                      onChange={(e) => handleItemQuantityChange(index, parseInt(e.target.value) || 0)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="remark">备注</Label>
-        <Input id="remark" placeholder="入库备注信息" />
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button variant="outline">取消</Button>
-        <Button>确认入库</Button>
-      </div>
-    </div>
-  );
+        
+        <div className="space-y-2">
+          <Label htmlFor="remark">备注</Label>
+          <Input
+            id="remark"
+            placeholder="入库备注信息"
+            value={inboundForm.remark}
+            onChange={(e) => handleInputChange('remark', e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" type="button" className="px-6">取消</Button>
+          <Button type="submit" className="px-6">确认入库</Button>
+        </div>
+      </form>
+    );
+  };
+
+  const OutboundForm = () => {
+    const handleInputChange = (field: string, value: string) => {
+      setOutboundForm(prev => ({ ...prev, [field]: value }));
+    };
+    
+    const handleItemQuantityChange = (index: number, quantity: number) => {
+      setOutboundForm(prev => {
+        const newItems = [...prev.items];
+        newItems[index] = { ...newItems[index], quantity };
+        return { ...prev, items: newItems };
+      });
+    };
+    
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      // Here you would typically send the data to your backend
+      console.log('Outbound form submitted:', outboundForm);
+      // Reset form or close dialog
+    };
+    
+    return (
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="department">领用部门</Label>
+            <Select value={outboundForm.department} onValueChange={(value) => handleInputChange('department', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择领用部门" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="production">生产部</SelectItem>
+                <SelectItem value="maintenance">维修部</SelectItem>
+                <SelectItem value="quality">质检部</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="warehouse">出库仓库</Label>
+            <Select value={outboundForm.warehouse} onValueChange={(value) => handleInputChange('warehouse', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择仓库" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="warehouse1">仓库A</SelectItem>
+                <SelectItem value="warehouse2">仓库B</SelectItem>
+                <SelectItem value="warehouse3">仓库C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* 物料选择表格 */}
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="w-16 text-center">#</TableHead>
+                <TableHead className="w-24">物料编码</TableHead>
+                <TableHead className="w-40">物料名称</TableHead>
+                <TableHead className="w-24">类别</TableHead>
+                <TableHead className="w-16">单位</TableHead>
+                <TableHead className="w-24">数量</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {outboundForm.items.map((item, index) => (
+                <TableRow key={item.code} className="hover:bg-gray-50">
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                  <TableCell className="font-mono">{item.code}</TableCell>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.unit}</TableCell>
+                  <TableCell>
+                    <Input
+                      type="number"
+                      placeholder="数量"
+                      className="w-full"
+                      min="0"
+                      value={item.quantity || ''}
+                      onChange={(e) => handleItemQuantityChange(index, parseInt(e.target.value) || 0)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="remark">备注</Label>
+          <Input
+            id="remark"
+            placeholder="出库备注信息"
+            value={outboundForm.remark}
+            onChange={(e) => handleInputChange('remark', e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" type="button" className="px-6">取消</Button>
+          <Button type="submit" className="px-6">确认出库</Button>
+        </div>
+      </form>
+    );
+  };
+
+  const TransferForm = () => {
+    const handleInputChange = (field: string, value: string) => {
+      setTransferForm(prev => ({ ...prev, [field]: value }));
+    };
+    
+    const handleItemQuantityChange = (index: number, quantity: number) => {
+      setTransferForm(prev => {
+        const newItems = [...prev.items];
+        newItems[index] = { ...newItems[index], quantity };
+        return { ...prev, items: newItems };
+      });
+    };
+    
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      // Here you would typically send the data to your backend
+      console.log('Transfer form submitted:', transferForm);
+      // Reset form or close dialog
+    };
+    
+    return (
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="fromWarehouse">源仓库</Label>
+            <Select value={transferForm.fromWarehouse} onValueChange={(value) => handleInputChange('fromWarehouse', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择源仓库" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="warehouse1">仓库A</SelectItem>
+                <SelectItem value="warehouse2">仓库B</SelectItem>
+                <SelectItem value="warehouse3">仓库C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="toWarehouse">目标仓库</Label>
+            <Select value={transferForm.toWarehouse} onValueChange={(value) => handleInputChange('toWarehouse', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择目标仓库" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="warehouse1">仓库A</SelectItem>
+                <SelectItem value="warehouse2">仓库B</SelectItem>
+                <SelectItem value="warehouse3">仓库C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* 物料选择表格 */}
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="w-16 text-center">#</TableHead>
+                <TableHead className="w-24">物料编码</TableHead>
+                <TableHead className="w-40">物料名称</TableHead>
+                <TableHead className="w-24">类别</TableHead>
+                <TableHead className="w-16">单位</TableHead>
+                <TableHead className="w-24">数量</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transferForm.items.map((item, index) => (
+                <TableRow key={item.code} className="hover:bg-gray-50">
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                  <TableCell className="font-mono">{item.code}</TableCell>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.unit}</TableCell>
+                  <TableCell>
+                    <Input
+                      type="number"
+                      placeholder="数量"
+                      className="w-full"
+                      min="0"
+                      value={item.quantity || ''}
+                      onChange={(e) => handleItemQuantityChange(index, parseInt(e.target.value) || 0)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="transferRemark">备注</Label>
+          <Input
+            id="transferRemark"
+            placeholder="移库备注信息"
+            value={transferForm.remark}
+            onChange={(e) => handleInputChange('remark', e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" type="button" className="px-6">取消</Button>
+          <Button type="submit" className="px-6">确认移库</Button>
+        </div>
+      </form>
+    );
+  };
+
+  const InventoryForm = () => {
+    const handleInputChange = (field: string, value: string) => {
+      setInventoryForm(prev => ({ ...prev, [field]: value }));
+    };
+    
+    const handleItemQuantityChange = (index: number, field: string, value: number) => {
+      setInventoryForm(prev => {
+        const newItems = [...prev.items];
+        newItems[index] = {
+          ...newItems[index],
+          [field]: value,
+          difference: field === 'actualQuantity' ? value - newItems[index].systemQuantity : newItems[index].difference
+        };
+        return { ...prev, items: newItems };
+      });
+    };
+    
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      // Here you would typically send the data to your backend
+      console.log('Inventory form submitted:', inventoryForm);
+      // Reset form or close dialog
+    };
+    
+    return (
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="inventoryWarehouse">盘点仓库</Label>
+            <Select value={inventoryForm.warehouse} onValueChange={(value) => handleInputChange('warehouse', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择仓库" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="warehouse1">仓库A</SelectItem>
+                <SelectItem value="warehouse2">仓库B</SelectItem>
+                <SelectItem value="warehouse3">仓库C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* 物料选择表格 */}
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="w-16 text-center">#</TableHead>
+                <TableHead className="w-24">物料编码</TableHead>
+                <TableHead className="w-40">物料名称</TableHead>
+                <TableHead className="w-24">类别</TableHead>
+                <TableHead className="w-16">单位</TableHead>
+                <TableHead className="w-24 text-right">系统数量</TableHead>
+                <TableHead className="w-32">实际数量</TableHead>
+                <TableHead className="w-20 text-right">差异</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {inventoryForm.items.map((item, index) => (
+                <TableRow key={item.code} className="hover:bg-gray-50">
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                  <TableCell className="font-mono">{item.code}</TableCell>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.unit}</TableCell>
+                  <TableCell className="text-right">{item.systemQuantity}</TableCell>
+                  <TableCell>
+                    <Input
+                      type="number"
+                      placeholder="实际数量"
+                      className="w-full"
+                      min="0"
+                      value={item.actualQuantity || ''}
+                      onChange={(e) => handleItemQuantityChange(index, 'actualQuantity', parseInt(e.target.value) || 0)}
+                    />
+                  </TableCell>
+                  <TableCell className={`text-right font-medium ${item.difference > 0 ? "text-red-600" : item.difference < 0 ? "text-green-600" : "text-gray-500"}`}>
+                    {item.difference > 0 ? `+${item.difference}` : item.difference}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="inventoryRemark">备注</Label>
+          <Input
+            id="inventoryRemark"
+            placeholder="盘点备注信息"
+            value={inventoryForm.remark}
+            onChange={(e) => handleInputChange('remark', e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" type="button" className="px-6">取消</Button>
+          <Button type="submit" className="px-6">开始盘点</Button>
+        </div>
+      </form>
+    );
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -224,7 +632,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                       新增入库单
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
+                  <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>新增入库单</DialogTitle>
                       <DialogDescription>
@@ -293,11 +701,44 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">出库管理</h3>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                新增出库单
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="搜索出库单..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 w-80"
+                  />
+                </div>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  筛选
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  导出
+                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      新增出库单
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>新增出库单</DialogTitle>
+                      <DialogDescription>
+                        填写出库信息，系统将自动更新库存
+                      </DialogDescription>
+                    </DialogHeader>
+                    <OutboundForm />
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
             <Card>
               <Table>
@@ -352,11 +793,44 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">移库管理</h3>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                新增移库单
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="搜索移库单..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 w-80"
+                  />
+                </div>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  筛选
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  导出
+                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      新增移库单
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>新增移库单</DialogTitle>
+                      <DialogDescription>
+                        填写移库信息，系统将自动更新库存
+                      </DialogDescription>
+                    </DialogHeader>
+                    <TransferForm />
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
             <Card>
               <Table>
@@ -411,11 +885,44 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">盘点管理</h3>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                新增盘点单
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="搜索盘点单..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 w-80"
+                  />
+                </div>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  筛选
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  导出
+                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      新增盘点单
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-5xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>新增盘点单</DialogTitle>
+                      <DialogDescription>
+                        填写盘点信息，系统将自动更新库存
+                      </DialogDescription>
+                    </DialogHeader>
+                    <InventoryForm />
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
             <Card>
               <Table>

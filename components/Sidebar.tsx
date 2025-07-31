@@ -25,7 +25,11 @@ const menuItems = [
     id: 'dashboard',
     label: '仪表盘',
     icon: LayoutDashboard,
-    description: '数据概览与快捷操作'
+    description: '数据概览与快捷操作',
+    subItems: [
+      { id: 'overview', label: '数据概览', icon: LayoutDashboard },
+      { id: 'visualization', label: '数据大屏', icon: BarChart3 }
+    ]
   },
   {
     id: 'warehouse',
@@ -105,18 +109,22 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
 
   const hasPermission = (moduleId: string) => {
     // 这里可以根据用户角色实现权限控制
-    if (!user) return false;
+    if (!user) {
+      return false;
+    }
     
-    // 管理员有所有权限
-    if (user.role === '系统管理员') return true;
+    // 超级管理员有所有权限
+    if (user.role === '超级管理员') {
+      return true;
+    }
     
     // 仓库管理员权限
     if (user.role === '仓库管理员') {
       return ['dashboard', 'warehouse', 'basicData', 'reports'].includes(moduleId);
     }
     
-    // 业务人员权限
-    if (user.role === '业务人员') {
+    // 业务人员权限 (包括采购员)
+    if (user.role === '业务人员' || user.role === '采购员') {
       return ['dashboard', 'business', 'reports'].includes(moduleId);
     }
     
@@ -166,7 +174,9 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
           const isExpanded = expandedItems.includes(item.id);
           const hasSubItems = item.subItems && item.subItems.length > 0;
 
-          if (!hasAccess) return null;
+          if (!hasAccess) {
+            return null;
+          }
 
           return (
             <div key={item.id} className="space-y-1">

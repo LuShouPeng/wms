@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
-import { 
+import {
   Package,
   ArrowUpDown,
   TrendingUp,
@@ -24,8 +24,13 @@ import {
   Edit,
   Download
 } from 'lucide-react';
+import EchartsDashboardPage from './EchartsDashboardPage';
 
-export function Dashboard({ user }: { user: any }) {
+export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
+  user: any;
+  activeSubModule?: string;
+  onSubModuleChange?: (subModule: string) => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState<any>(null);
 
@@ -93,11 +98,24 @@ export function Dashboard({ user }: { user: any }) {
   };
 
   const quickActions = [
-    { label: '快速入库', icon: Plus, color: 'bg-green-500', module: 'warehouse', action: 'inbound' },
-    { label: '快速出库', icon: ArrowUpDown, color: 'bg-blue-500', module: 'warehouse', action: 'outbound' },
-    { label: '库存盘点', icon: Package, color: 'bg-purple-500', module: 'warehouse', action: 'inventory' },
-    { label: '采购申请', icon: ShoppingCart, color: 'bg-orange-500', module: 'business', action: 'purchase' },
+    { label: '快速入库', icon: Plus, color: 'text-green-500', module: 'warehouse', action: 'inbound' },
+    { label: '快速出库', icon: ArrowUpDown, color: 'text-blue-500', module: 'warehouse', action: 'outbound' },
+    { label: '库存盘点', icon: Package, color: 'text-purple-500', module: 'warehouse', action: 'inventory' },
+    { label: '采购申请', icon: ShoppingCart, color: 'text-orange-500', module: 'business', action: 'purchase' },
   ];
+
+  // Handle submodule navigation
+  if (activeSubModule === 'visualization') {
+    return (
+      <EchartsDashboardPage
+        user={user}
+        onNavigateBack={() => onSubModuleChange?.('overview')}
+      />
+    );
+  }
+
+  // Diagnostic logging for quick actions
+  console.log('Quick Actions:', quickActions);
 
   if (isLoading) {
     return (
@@ -267,16 +285,14 @@ export function Dashboard({ user }: { user: any }) {
               <Button
                 key={index}
                 variant="outline"
-                className="h-20 flex flex-col gap-2"
+                className="h-12 flex flex-row items-center gap-2 px-4"
                 onClick={() => {
                   // 这里可以实现快捷操作的跳转逻辑
                   console.log(`Quick action: ${action.label}`);
                 }}
               >
-                <div className={`${action.color} p-2 rounded-full text-white`}>
-                  <action.icon className="h-4 w-4" />
-                </div>
-                <span className="text-xs">{action.label}</span>
+                <action.icon className={`h-5 w-5 ${action.color}`} />
+                <span className="text-sm whitespace-nowrap">{action.label}</span>
               </Button>
             ))}
           </div>
@@ -393,6 +409,7 @@ export function Dashboard({ user }: { user: any }) {
             </CardContent>
           </Card>
         </TabsContent>
+
       </Tabs>
     </div>
   );
