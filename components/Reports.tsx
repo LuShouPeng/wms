@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -11,14 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { 
+import {
   BarChart,
   Bar,
   XAxis,
@@ -33,8 +33,8 @@ import {
   Line,
   ResponsiveContainer
 } from 'recharts';
-import { 
-  BarChart3, 
+import {
+  BarChart3,
   PieChart as PieChartIcon,
   TrendingUp,
   Download,
@@ -42,12 +42,21 @@ import {
   Calendar,
   AlertTriangle,
   Package,
-  DollarSign
+  DollarSign,
+  Send
 } from 'lucide-react';
+import { ReplenishmentDialog } from './ReplenishmentDialog';
 
 export function Reports({ user }) {
   const [activeTab, setActiveTab] = useState('inventory');
   const [selectedPeriod, setSelectedPeriod] = useState('month');
+  const [replenishmentDialog, setReplenishmentDialog] = useState({
+    open: false,
+    productCode: '',
+    productName: '',
+    currentStock: 0,
+    minStock: 0
+  });
 
   // 模拟库存数据
   const inventoryData = [
@@ -110,6 +119,16 @@ export function Reports({ user }) {
       low: { label: '低风险', variant: 'success' }
     };
     return levelMap[level] || { label: level, variant: 'default' };
+  };
+
+  const handleReplenishmentRequest = (alert: any) => {
+    setReplenishmentDialog({
+      open: true,
+      productCode: alert.code,
+      productName: alert.name,
+      currentStock: alert.currentStock,
+      minStock: alert.minStock
+    });
   };
 
   return (
@@ -381,6 +400,7 @@ export function Reports({ user }) {
                       <TableHead>最低库存</TableHead>
                       <TableHead>缺口数量</TableHead>
                       <TableHead>预警级别</TableHead>
+                      <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -401,6 +421,15 @@ export function Reports({ user }) {
                               {levelInfo.label}
                             </Badge>
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              onClick={() => handleReplenishmentRequest(item)}
+                            >
+                              <Send className="h-3 w-3 mr-1" />
+                              发送补货信息
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -411,6 +440,16 @@ export function Reports({ user }) {
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* 补货申请对话框 */}
+      <ReplenishmentDialog
+        open={replenishmentDialog.open}
+        onOpenChange={(open) => setReplenishmentDialog({ ...replenishmentDialog, open })}
+        productCode={replenishmentDialog.productCode}
+        productName={replenishmentDialog.productName}
+        currentStock={replenishmentDialog.currentStock}
+        minStock={replenishmentDialog.minStock}
+      />
     </div>
   );
 }

@@ -22,9 +22,11 @@ import {
   RefreshCw,
   Eye,
   Edit,
-  Download
+  Download,
+  Send
 } from 'lucide-react';
 import EchartsDashboardPage from './EchartsDashboardPage';
+import { ReplenishmentDialog } from './ReplenishmentDialog';
 
 export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
   user: any;
@@ -33,6 +35,13 @@ export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const [replenishmentDialog, setReplenishmentDialog] = useState({
+    open: false,
+    productCode: '',
+    productName: '',
+    currentStock: 0,
+    minStock: 0
+  });
 
   // 模拟数据加载
   useEffect(() => {
@@ -95,6 +104,16 @@ export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
       default:
         return <Badge variant="secondary">正常</Badge>;
     }
+  };
+
+  const handleReplenishmentRequest = (alert: any) => {
+    setReplenishmentDialog({
+      open: true,
+      productCode: alert.productCode,
+      productName: alert.productName,
+      currentStock: alert.currentStock,
+      minStock: alert.minStock
+    });
   };
 
   const quickActions = [
@@ -365,9 +384,12 @@ export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
                       <Button size="sm" variant="outline">
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button size="sm">
-                        <Plus className="h-3 w-3 mr-1" />
-                        补货
+                      <Button
+                        size="sm"
+                        onClick={() => handleReplenishmentRequest(alert)}
+                      >
+                        <Send className="h-3 w-3 mr-1" />
+                        发送补货信息
                       </Button>
                     </div>
                   </div>
@@ -411,6 +433,16 @@ export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
         </TabsContent>
 
       </Tabs>
+
+      {/* 补货申请对话框 */}
+      <ReplenishmentDialog
+        open={replenishmentDialog.open}
+        onOpenChange={(open) => setReplenishmentDialog({ ...replenishmentDialog, open })}
+        productCode={replenishmentDialog.productCode}
+        productName={replenishmentDialog.productName}
+        currentStock={replenishmentDialog.currentStock}
+        minStock={replenishmentDialog.minStock}
+      />
     </div>
   );
 }

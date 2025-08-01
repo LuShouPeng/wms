@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Badge } from './ui/badge';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,11 +19,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { 
-  Bell, 
-  LogOut, 
-  User, 
-  Settings, 
+import {
+  Bell,
+  LogOut,
+  User,
+  Settings,
   Search,
   AlertCircle,
   Clock,
@@ -37,25 +37,38 @@ import {
   Sun,
   Globe,
   HelpCircle,
-  MessageSquare
+  MessageSquare,
+  Send
 } from 'lucide-react';
+import { ReplenishmentDialog } from './ReplenishmentDialog';
 
 export function Header({ user, onLogout, activeModule, onModuleChange, onToggleSidebar }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [replenishmentDialog, setReplenishmentDialog] = useState({
+    open: false,
+    productCode: '',
+    productName: '',
+    currentStock: 0,
+    minStock: 0
+  });
 
   // 模拟通知数据
   const notifications = [
     { 
       id: 1, 
       type: 'warning', 
-      title: '库存预警', 
-      message: '物料A001库存不足，当前仅剩15个', 
+      title: '库存预警',
+      message: '物料A001库存不足，当前仅剩15个',
       time: '5分钟前',
       isRead: false,
-      action: () => onModuleChange('warehouse')
+      action: () => onModuleChange('warehouse'),
+      productCode: 'A001',
+      productName: '标准螺丝M6x20',
+      currentStock: 15,
+      minStock: 50
     },
     { 
       id: 2, 
@@ -125,6 +138,19 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
     setIsDarkMode(!isDarkMode);
     // 这里可以实现主题切换逻辑
     document.documentElement.classList.toggle('dark');
+  };
+
+  const handleReplenishmentRequest = (notification: any) => {
+    if (notification.type === 'warning' && notification.productCode) {
+      setReplenishmentDialog({
+        open: true,
+        productCode: notification.productCode,
+        productName: notification.productName,
+        currentStock: notification.currentStock,
+        minStock: notification.minStock
+      });
+      setShowNotifications(false);
+    }
   };
 
   return (
@@ -342,6 +368,16 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
           </Button>
         </div>
       </div>
+
+      {/* 补货申请对话框 */}
+      <ReplenishmentDialog
+        open={replenishmentDialog.open}
+        onOpenChange={(open) => setReplenishmentDialog({ ...replenishmentDialog, open })}
+        productCode={replenishmentDialog.productCode}
+        productName={replenishmentDialog.productName}
+        currentStock={replenishmentDialog.currentStock}
+        minStock={replenishmentDialog.minStock}
+      />
     </header>
   );
 }
