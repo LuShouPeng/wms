@@ -185,7 +185,7 @@ export default function App() {
         </div>
 
         {/* 主内容区域 */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
           {/* 顶部导航栏 */}
           <Header 
             user={currentUser}
