@@ -29,6 +29,7 @@ import {
   Phone
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { suggestedSuppliers } from '../../mockdata';
 
 interface ReplenishmentDialogProps {
   open: boolean;
@@ -222,11 +223,11 @@ export function ReplenishmentDialog({
                   <SelectValue placeholder="选择供应商" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="supplier1">上海五金有限公司</SelectItem>
-                  <SelectItem value="supplier2">北京电子元件厂</SelectItem>
-                  <SelectItem value="supplier3">广州零配件批发</SelectItem>
-                  <SelectItem value="supplier4">深圳制造企业</SelectItem>
-                  <SelectItem value="other">其他供应商</SelectItem>
+                  {suggestedSuppliers.map((supplier) => (
+                    <SelectItem key={supplier.value} value={supplier.value}>
+                      {supplier.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

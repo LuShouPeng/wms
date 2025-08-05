@@ -65,7 +65,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { getStatusBadge } from '../lib/utils';
-import { mockDamageRecords, mockProducts, damageTypes } from '../constants/mockData';
+import { mockDamageRecords, mockProducts, damageTypes } from '../../mockdata';
 
 export function DamageManagement() {
   const [searchTerm, setSearchTerm] = useState('');

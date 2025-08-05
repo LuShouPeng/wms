@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { mockProducts } from '../constants/mockData';
+import { mockProducts } from '../../mockdata';
 
 export function StandaloneInventoryForm() {
   // Form state

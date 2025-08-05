@@ -5,6 +5,7 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { AlertTriangle, Shield, User, Lock, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription } from './ui/alert';
+import { mockLoginUsers } from '../../mockdata';
 
 export function Login({ onLogin }) {
   const [formData, setFormData] = useState({
@@ -38,13 +39,7 @@ export function Login({ onLogin }) {
     }
 
     // 模拟登录验证（实际项目中应调用API）
-    const mockUsers = [
-      { id: 1, username: 'admin', password: 'admin123', name: '系统管理员', role: '超级管理员' },
-      { id: 2, username: 'warehouse', password: 'wh123', name: '仓库管理员', role: '仓库管理员' },
-      { id: 3, username: 'purchase', password: 'pur123', name: '采购员', role: '采购员' }
-    ];
-
-    const user = mockUsers.find(u => 
+    const user = mockLoginUsers.find(u => 
       u.username === formData.username && u.password === formData.password
     );
 

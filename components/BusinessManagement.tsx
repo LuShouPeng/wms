@@ -44,7 +44,7 @@ import { WorkflowForm } from './forms/WorkflowForm';
 import { UserForm } from './forms/UserForm';
 import { RoleForm } from './forms/RoleForm';
 // ✅ FIX 3: Integrate mock data from constants
-import { mockUsers, mockWorkflows } from '../constants/mockData';
+import { mockUsers, mockWorkflows } from '../../mockdata';
 // ✅ FIX 8: Add cross-component integration
 import { DamageManagement } from './DamageManagement';
 import { WarehouseManagement } from './WarehouseManagement';

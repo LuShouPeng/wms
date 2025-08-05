@@ -45,12 +45,28 @@ import {
   Warehouse
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../../mockdata';
 
 interface WarehouseEditPageProps {
   warehouseId?: string;
   onBack: () => void;
   onSave?: (data: any) => void;
 }
+
+type FormData = {
+  warehouseNumber: string;
+  warehouseName: string;
+  department: string;
+  warehouseType: string;
+  leaseTime: string;
+  description: string;
+  area: string;
+  address: string;
+  contactPerson: string;
+  phone: string;
+  supplierId: string;
+  supplierName: string;
+};
 
 export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEditPageProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +75,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
   const [supplierSearchTerm, setSupplierSearchTerm] = useState('');
 
   // 表单数据状态
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     warehouseNumber: 'WH-2024-001', // 只读字段
     warehouseName: '',
     department: '',
@@ -75,37 +91,11 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
   });
 
   // 表单验证错误状态
-  const [errors, setErrors] = useState({});
-
-  // 部门选项
-  const departments = [
-    { value: 'finance', label: '财务中心' },
-    { value: 'it', label: '信息技术中心' },
-    { value: 'production', label: '生产中心' },
-    { value: 'logistics', label: '物流中心' },
-    { value: 'hr', label: '人力资源中心' }
-  ];
-
-  // 仓库类型选项
-  const warehouseTypes = [
-    { value: 'product', label: '产品仓库' },
-    { value: 'raw_material', label: '原料仓库' },
-    { value: 'finished_goods', label: '成品仓库' },
-    { value: 'spare_parts', label: '备件仓库' },
-    { value: 'temporary', label: '临时仓库' }
-  ];
-
-  // 模拟供应商数据
-  const suppliers = [
-    { id: 'SUP001', name: '北京xx电子有限公司', contact: '李总', phone: '010-12345678' },
-    { id: 'SUP002', name: '上海xx五金有限公司', contact: '王总', phone: '021-87654321' },
-    { id: 'SUP003', name: '深圳xx科技有限公司', contact: '张总', phone: '0755-12345678' },
-    { id: 'SUP004', name: '广州xx贸易有限公司', contact: '刘总', phone: '020-87654321' }
-  ];
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
   // 过滤后的供应商列表
-  const filteredSuppliers = suppliers.filter(supplier =>
-    supplier.name.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
+  const filteredSuppliers = editPageSuppliers.filter(supplier =>
+    supplier.label.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
     supplier.contact.toLowerCase().includes(supplierSearchTerm.toLowerCase())
   );
 
@@ -115,23 +105,13 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
       // 模拟加载现有仓库数据
       setFormData(prev => ({
         ...prev,
-        warehouseName: '主仓库A',
-        department: 'logistics',
-        warehouseType: 'product',
-        leaseTime: '2024-01-01',
-        description: '用于存放成品和半成品的主要仓库',
-        area: '1000',
-        address: '北京市朝阳区xxx路123号',
-        contactPerson: '张经理',
-        phone: '13800138000',
-        supplierId: 'SUP001',
-        supplierName: '北京xx电子有限公司'
+        ...mockWarehouseFormData
       }));
     }
   }, [warehouseId]);
 
   // 处理表单字段变化
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -140,29 +120,45 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
-        [field]: null
+        [field]: undefined
       }));
     }
   };
 
   // 表单验证
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Partial<Record<keyof FormData, string>> = {};
 
     // 必填字段验证
-    const requiredFields = {
-      warehouseName: '仓库名称',
-      department: '部门',
-      warehouseType: '仓库类型',
-      area: '面积',
-      address: '地址',
-      contactPerson: '联系人',
-      phone: '电话'
+    const requiredFields: (keyof FormData)[] = [
+      'warehouseName',
+      'department',
+      'warehouseType',
+      'area',
+      'address',
+      'contactPerson',
+      'phone'
+    ];
+
+    const fieldLabels: Record<keyof FormData, string> = {
+        warehouseNumber: '仓库编号',
+        warehouseName: '仓库名称',
+        department: '部门',
+        warehouseType: '仓库类型',
+        leaseTime: '租赁时间',
+        description: '作用说明',
+        area: '面积',
+        address: '地址',
+        contactPerson: '联系人',
+        phone: '电话',
+        supplierId: '供应商ID',
+        supplierName: '供应商名称'
     };
 
-    Object.entries(requiredFields).forEach(([field, label]) => {
+
+    requiredFields.forEach((field) => {
       if (!formData[field] || String(formData[field]).trim() === '') {
-        newErrors[field] = `${label}不能为空`;
+        newErrors[field] = `${fieldLabels[field]}不能为空`;
       }
     });
 
@@ -172,7 +168,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
     }
 
     // 面积数字验证
-    if (formData.area && (isNaN(formData.area) || Number(formData.area) <= 0)) {
+    if (formData.area && (isNaN(Number(formData.area)) || Number(formData.area) <= 0)) {
       newErrors.area = '面积必须是大于0的数字';
     }
 
@@ -181,7 +177,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
   };
 
   // 提交表单
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -236,11 +232,11 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
   };
 
   // 选择供应商
-  const handleSelectSupplier = (supplier) => {
+  const handleSelectSupplier = (supplier: { value: string; label: string; }) => {
     setFormData(prev => ({
       ...prev,
-      supplierId: supplier.id,
-      supplierName: supplier.name
+      supplierId: supplier.value,
+      supplierName: supplier.label
     }));
     setShowSupplierDialog(false);
     setSupplierSearchTerm('');
@@ -268,12 +264,12 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
         <div className="max-h-60 overflow-y-auto space-y-2">
           {filteredSuppliers.map((supplier) => (
             <div
-              key={supplier.id}
+              key={supplier.value}
               className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
               onClick={() => handleSelectSupplier(supplier)}
             >
               <div>
-                <p className="font-medium">{supplier.name}</p>
+                <p className="font-medium">{supplier.label}</p>
                 <p className="text-sm text-gray-500">
                   {supplier.contact} | {supplier.phone}
                 </p>
@@ -379,7 +375,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
                     <SelectValue placeholder="选择所属部门" />
                   </SelectTrigger>
                   <SelectContent>
-                    {departments.map((dept) => (
+                    {editPageDepartments.map((dept) => (
                       <SelectItem key={dept.value} value={dept.value}>
                         {dept.label}
                       </SelectItem>

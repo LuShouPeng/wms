@@ -44,7 +44,7 @@ import {
   Eye
 } from 'lucide-react';
 import { DamageManagement } from './DamageManagement';
-import { mockProducts } from '../constants/mockData';
+import { mockProducts, inboundOrders, outboundOrders, transferOrders, inventoryOrders, suppliers, warehouses, departments } from '../../mockdata';
 
 export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }: { user?: any; activeSubModule?: string; onSubModuleChange?: (module: string) => void }) {
   const [activeTab, setActiveTab] = useState(activeSubModule || 'inbound');
@@ -96,82 +96,6 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
     }
   };
 
-  // 模拟数据
-  const inboundOrders = [
-    {
-      id: 'IN-2024-001',
-      date: '2024-01-15',
-      supplier: '供应商A',
-      materials: 5,
-      totalValue: '¥12,580',
-      status: 'completed',
-      operator: '张三'
-    },
-    {
-      id: 'IN-2024-002', 
-      date: '2024-01-15',
-      supplier: '供应商B',
-      materials: 3,
-      totalValue: '¥8,750',
-      status: 'pending',
-      operator: '李四'
-    },
-    {
-      id: 'IN-2024-003',
-      date: '2024-01-14',
-      supplier: '供应商C',
-      materials: 8,
-      totalValue: '¥25,600',
-      status: 'processing',
-      operator: '王五'
-    }
-  ];
-
-  const outboundOrders = [
-    {
-      id: 'OUT-2024-001',
-      date: '2024-01-15',
-      department: '生产部',
-      materials: 4,
-      totalValue: '¥6,800',
-      status: 'completed',
-      operator: '张三'
-    },
-    {
-      id: 'OUT-2024-002',
-      date: '2024-01-15', 
-      department: '维修部',
-      materials: 2,
-      totalValue: '¥3,200',
-      status: 'approved',
-      operator: '李四'
-    }
-  ];
-
-  const transferOrders = [
-    {
-      id: 'TR-2024-001',
-      date: '2024-01-15',
-      fromWarehouse: '仓库A',
-      toWarehouse: '仓库B',
-      materials: 3,
-      status: 'completed',
-      operator: '王五'
-    }
-  ];
-
-  const inventoryOrders = [
-    {
-      id: 'IV-2024-001',
-      date: '2024-01-15',
-      warehouse: '仓库A',
-      materials: 156,
-      differences: 3,
-      status: 'completed',
-      operator: '张三'
-    }
-  ];
-
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { label: string; variant: any }> = {
       completed: { label: '已完成', variant: 'success' },
@@ -212,9 +136,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择供应商" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="supplier1">供应商A</SelectItem>
-                <SelectItem value="supplier2">供应商B</SelectItem>
-                <SelectItem value="supplier3">供应商C</SelectItem>
+                {suppliers.map(supplier => (
+                  <SelectItem key={supplier.value} value={supplier.value}>{supplier.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -225,9 +149,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择仓库" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="warehouse1">仓库A</SelectItem>
-                <SelectItem value="warehouse2">仓库B</SelectItem>
-                <SelectItem value="warehouse3">仓库C</SelectItem>
+                {warehouses.map(warehouse => (
+                  <SelectItem key={warehouse.value} value={warehouse.value}>{warehouse.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -317,9 +241,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择领用部门" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="production">生产部</SelectItem>
-                <SelectItem value="maintenance">维修部</SelectItem>
-                <SelectItem value="quality">质检部</SelectItem>
+                {departments.map(department => (
+                  <SelectItem key={department.value} value={department.value}>{department.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -330,9 +254,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择仓库" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="warehouse1">仓库A</SelectItem>
-                <SelectItem value="warehouse2">仓库B</SelectItem>
-                <SelectItem value="warehouse3">仓库C</SelectItem>
+                {warehouses.map(warehouse => (
+                  <SelectItem key={warehouse.value} value={warehouse.value}>{warehouse.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -422,9 +346,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择源仓库" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="warehouse1">仓库A</SelectItem>
-                <SelectItem value="warehouse2">仓库B</SelectItem>
-                <SelectItem value="warehouse3">仓库C</SelectItem>
+                {warehouses.map(warehouse => (
+                  <SelectItem key={warehouse.value} value={warehouse.value}>{warehouse.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -435,9 +359,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择目标仓库" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="warehouse1">仓库A</SelectItem>
-                <SelectItem value="warehouse2">仓库B</SelectItem>
-                <SelectItem value="warehouse3">仓库C</SelectItem>
+                {warehouses.map(warehouse => (
+                  <SelectItem key={warehouse.value} value={warehouse.value}>{warehouse.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -531,9 +455,9 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
                 <SelectValue placeholder="选择仓库" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="warehouse1">仓库A</SelectItem>
-                <SelectItem value="warehouse2">仓库B</SelectItem>
-                <SelectItem value="warehouse3">仓库C</SelectItem>
+                {warehouses.map(warehouse => (
+                  <SelectItem key={warehouse.value} value={warehouse.value}>{warehouse.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

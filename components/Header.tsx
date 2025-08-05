@@ -41,8 +41,37 @@ import {
   Send
 } from 'lucide-react';
 import { ReplenishmentDialog } from './ReplenishmentDialog';
+import { mockNotifications as notifications } from '../../mockdata';
 
-export function Header({ user, onLogout, activeModule, onModuleChange, onToggleSidebar }) {
+type Module = 'dashboard' | 'warehouse' | 'business' | 'reports' | 'basicData' | 'settings';
+
+interface Notification {
+  id: number;
+  type: string;
+  title: string;
+  message: string;
+  time: string;
+  isRead: boolean;
+  action?: () => void;
+  productCode?: string;
+  productName?: string;
+  currentStock?: number;
+  minStock?: number;
+}
+
+interface HeaderProps {
+  user: {
+    name?: string;
+    role?: string;
+    email?: string;
+  };
+  onLogout: () => void;
+  activeModule: Module;
+  onModuleChange: (module: Module) => void;
+  onToggleSidebar: () => void;
+}
+
+export function Header({ user, onLogout, activeModule, onModuleChange, onToggleSidebar }: HeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -55,52 +84,9 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
     minStock: 0
   });
 
-  // 模拟通知数据
-  const notifications = [
-    { 
-      id: 1, 
-      type: 'warning', 
-      title: '库存预警',
-      message: '物料A001库存不足，当前仅剩15个',
-      time: '5分钟前',
-      isRead: false,
-      action: () => onModuleChange('warehouse'),
-      productCode: 'A001',
-      productName: '标准螺丝M6x20',
-      currentStock: 15,
-      minStock: 50
-    },
-    { 
-      id: 2, 
-      type: 'info', 
-      title: '待审批', 
-      message: '采购单PO-2024-001等待您的审批', 
-      time: '10分钟前',
-      isRead: false,
-      action: () => onModuleChange('business')
-    },
-    { 
-      id: 3, 
-      type: 'success', 
-      title: '入库完成', 
-      message: '入库单IN-2024-058已完成处理', 
-      time: '1小时前',
-      isRead: true,
-      action: () => onModuleChange('warehouse')
-    },
-    { 
-      id: 4, 
-      type: 'info', 
-      title: '系统更新', 
-      message: '系统将于今晚23:00进行维护更新', 
-      time: '2小时前',
-      isRead: true
-    }
-  ];
-
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const getNotificationIcon = (type) => {
+  const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'warning':
         return <AlertCircle className="h-4 w-4 text-orange-500" />;
@@ -113,7 +99,7 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
     }
   };
 
-  const getModuleTitle = (module) => {
+  const getModuleTitle = (module: Module) => {
     const titles = {
       dashboard: '仪表盘',
       warehouse: '仓库管理',
@@ -125,7 +111,7 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
     return titles[module] || '仓储管理系统';
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       // 这里可以实现全局搜索功能
@@ -140,7 +126,7 @@ export function Header({ user, onLogout, activeModule, onModuleChange, onToggleS
     document.documentElement.classList.toggle('dark');
   };
 
-  const handleReplenishmentRequest = (notification: any) => {
+  const handleReplenishmentRequest = (notification: Notification) => {
     if (notification.type === 'warning' && notification.productCode) {
       setReplenishmentDialog({
         open: true,
