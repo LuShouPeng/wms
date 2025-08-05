@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { AlertTriangle, Shield, User, Lock, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription } from './ui/alert';
-import { mockLoginUsers } from '../../mockdata';
+import { mockLoginUsers } from '../mockdata';
+import { User as UserType } from '../lib/types';
 
-export function Login({ onLogin }) {
+interface LoginProps {
+  onLogin?: (user: UserType) => void;
+}
+
+export function Login({ onLogin }: LoginProps) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -21,13 +28,13 @@ export function Login({ onLogin }) {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     
@@ -55,7 +62,23 @@ export function Login({ onLogin }) {
         };
         console.log('登录日志:', loginLog);
         
-        onLogin(user);
+        // 如果有onLogin回调则调用，否则使用路由导航
+        if (onLogin) {
+          onLogin(user);
+        } else {
+          // 创建用户会话
+          const session = {
+            user,
+            loginTime: new Date().toISOString(),
+            lastActivity: new Date().toISOString()
+          };
+          
+          // 保存到本地存储
+          localStorage.setItem('userSession', JSON.stringify(session));
+          
+          // 导航到仪表盘
+          navigate('/dashboard');
+        }
       } else {
         setError('用户名或密码错误');
       }

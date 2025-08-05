@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -44,10 +45,20 @@ import {
   Eye
 } from 'lucide-react';
 import { DamageManagement } from './DamageManagement';
-import { mockProducts, inboundOrders, outboundOrders, transferOrders, inventoryOrders, suppliers, warehouses, departments } from '../../mockdata';
+import { mockProducts, inboundOrders, outboundOrders, transferOrders, inventoryOrders, suppliers, warehouses, departments } from '../mockdata';
 
-export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }: { user?: any; activeSubModule?: string; onSubModuleChange?: (module: string) => void }) {
-  const [activeTab, setActiveTab] = useState(activeSubModule || 'inbound');
+interface WarehouseManagementProps {
+  user?: any;
+  activeSubModule?: string;
+  onSubModuleChange?: (module: string) => void;
+}
+
+export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }: WarehouseManagementProps) {
+  const params = useParams();
+  const navigate = useNavigate();
+  const subModule = params.subModule;
+  
+  const [activeTab, setActiveTab] = useState(subModule || activeSubModule || 'inbound');
   const [searchTerm, setSearchTerm] = useState('');
   
   // Form state for inbound management
@@ -81,16 +92,23 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
     items: mockProducts.map(product => ({ ...product, systemQuantity: 100, actualQuantity: 0, difference: 0 }))
   });
 
-  // 当activeSubModule改变时，更新activeTab
-  React.useEffect(() => {
-    if (activeSubModule) {
+  // 当路由参数或activeSubModule改变时，更新activeTab
+  useEffect(() => {
+    if (subModule) {
+      setActiveTab(subModule);
+    } else if (activeSubModule) {
       setActiveTab(activeSubModule);
     }
-  }, [activeSubModule]);
+  }, [subModule, activeSubModule]);
 
-  // 当tab改变时，通知父组件
+  // 当tab改变时，更新路由并通知父组件
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+    
+    // 更新路由
+    navigate(`/warehouse/${value}`);
+    
+    // 如果有回调函数，则调用
     if (onSubModuleChange) {
       onSubModuleChange(value);
     }

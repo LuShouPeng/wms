@@ -19,7 +19,7 @@ import {
   ClipboardList,
   DollarSign
 } from 'lucide-react';
-import { menuItems } from '../../mockdata';
+import { menuItems } from '../mockdata';
 
 interface SidebarProps {
   activeModule?: string;

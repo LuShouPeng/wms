@@ -41,7 +41,7 @@ import {
   Send
 } from 'lucide-react';
 import { ReplenishmentDialog } from './ReplenishmentDialog';
-import { mockNotifications as notifications } from '../../mockdata';
+import { mockNotifications as notifications } from '../mockdata';
 
 type Module = 'dashboard' | 'warehouse' | 'business' | 'reports' | 'basicData' | 'settings';
 

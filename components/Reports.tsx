@@ -52,7 +52,7 @@ import {
   categoryData,
   financialData,
   alertData
-} from '../../mockdata';
+} from '../mockdata';
 
 export function Reports({ user }) {
   const [activeTab, setActiveTab] = useState('inventory');

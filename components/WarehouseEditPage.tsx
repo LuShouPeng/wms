@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -45,7 +46,7 @@ import {
   Warehouse
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../../mockdata';
+import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../mockdata';
 
 interface WarehouseEditPageProps {
   warehouseId?: string;
@@ -68,7 +69,14 @@ type FormData = {
   supplierName: string;
 };
 
-export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEditPageProps) {
+export function WarehouseEditPage({ warehouseId: propWarehouseId, onBack, onSave }: WarehouseEditPageProps) {
+  const params = useParams();
+  const navigate = useNavigate();
+  const urlWarehouseId = params.id;
+  
+  // 优先使用URL中的ID，如果没有则使用props中的ID
+  const warehouseId = urlWarehouseId || propWarehouseId;
+  
   const [isLoading, setIsLoading] = useState(false);
   const [showSupplierDialog, setShowSupplierDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -176,6 +184,16 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
     return Object.keys(newErrors).length === 0;
   };
 
+  // 处理返回按钮点击
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      // 如果没有提供onBack回调，则使用路由导航
+      navigate('/warehouse');
+    }
+  };
+
   // 提交表单
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -193,10 +211,11 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
       
       if (onSave) {
         onSave(formData);
+      } else {
+        // 如果没有提供onSave回调，则显示成功提示并导航回列表页
+        alert(warehouseId ? '仓库信息更新成功！' : '仓库创建成功！');
+        navigate('/warehouse');
       }
-      
-      // 这里可以显示成功提示
-      alert(warehouseId ? '仓库信息更新成功！' : '仓库创建成功！');
       
     } catch (error) {
       console.error('保存失败:', error);
@@ -291,7 +310,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
       {/* 页面标题栏 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={onBack}>
+          <Button variant="outline" onClick={handleBack}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             返回
           </Button>
@@ -558,7 +577,7 @@ export function WarehouseEditPage({ warehouseId, onBack, onSave }: WarehouseEdit
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={onBack}
+                onClick={handleBack}
                 disabled={isLoading}
               >
                 <X className="h-4 w-4 mr-2" />

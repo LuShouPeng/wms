@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -45,24 +46,41 @@ import {
 } from 'lucide-react';
 import { getStatusBadge } from '../lib/utils';
 import { WarehouseEditPage } from './WarehouseEditPage';
-import { mockWarehouses, mockMaterials, mockSuppliers } from '../../mockdata';
+import { mockWarehouses, mockMaterials, mockSuppliers } from '../mockdata';
 
-export function BasicData({ user, activeSubModule, onSubModuleChange }) {
-  const [activeTab, setActiveTab] = useState(activeSubModule || 'warehouses');
+interface BasicDataProps {
+  user?: any;
+  activeSubModule?: string;
+  onSubModuleChange?: (subModule: string) => void;
+}
+
+export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDataProps) {
+  const params = useParams();
+  const navigate = useNavigate();
+  const subModule = params.subModule;
+  
+  const [activeTab, setActiveTab] = useState(subModule || activeSubModule || 'warehouses');
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditPage, setShowEditPage] = useState(false);
-  const [editingWarehouseId, setEditingWarehouseId] = useState(null);
+  const [editingWarehouseId, setEditingWarehouseId] = useState<string | null>(null);
 
-  // 当activeSubModule改变时，更新activeTab
-  React.useEffect(() => {
-    if (activeSubModule) {
+  // 当路由参数或activeSubModule改变时，更新activeTab
+  useEffect(() => {
+    if (subModule) {
+      setActiveTab(subModule);
+    } else if (activeSubModule) {
       setActiveTab(activeSubModule);
     }
-  }, [activeSubModule]);
+  }, [subModule, activeSubModule]);
 
-  // 当tab改变时，通知父组件
-  const handleTabChange = (value) => {
+  // 当tab改变时，更新路由并通知父组件
+  const handleTabChange = (value: string) => {
     setActiveTab(value);
+    
+    // 更新路由
+    navigate(`/basic-data/${value}`);
+    
+    // 如果有回调函数，则调用
     if (onSubModuleChange) {
       onSubModuleChange(value);
     }

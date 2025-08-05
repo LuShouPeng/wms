@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import EchartsDashboardPage from './EchartsDashboardPage';
 import { ReplenishmentDialog } from './ReplenishmentDialog';
-import { mockDashboardData } from '../../mockdata';
+import { mockDashboardData } from '../mockdata';
 
 export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
   user: any;

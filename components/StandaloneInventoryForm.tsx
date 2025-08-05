@@ -10,15 +10,19 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { mockProducts } from '../../mockdata';
+import { mockProducts } from '../mockdata';
 
-export function StandaloneInventoryForm() {
+interface StandaloneInventoryFormProps {
+  warehouseId?: string;
+}
+
+export function StandaloneInventoryForm({ warehouseId }: StandaloneInventoryFormProps) {
   // Form state
   const [formData, setFormData] = useState({
     inventoryDate: new Date().toISOString().split('T')[0],
     inventoryPerson: '张三',
-    warehouseCode: 'WH001',
-    warehouseName: '主仓库',
+    warehouseCode: warehouseId || 'WH001',
+    warehouseName: warehouseId ? `仓库 ${warehouseId}` : '主仓库',
     remark: '',
     items: mockProducts.map(product => ({ 
       ...product, 
@@ -27,6 +31,17 @@ export function StandaloneInventoryForm() {
       difference: 0 
     }))
   });
+  
+  // 当warehouseId变化时更新表单数据
+  React.useEffect(() => {
+    if (warehouseId) {
+      setFormData(prev => ({
+        ...prev,
+        warehouseCode: warehouseId,
+        warehouseName: `仓库 ${warehouseId}`
+      }));
+    }
+  }, [warehouseId]);
 
   // Handle input changes for form fields
   const handleInputChange = (field: string, value: string) => {

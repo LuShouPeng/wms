@@ -8,7 +8,7 @@ import {
   warehouseDistributionOption,
   productCategoryOption,
   inboundOutboundOption
-} from '../../mockdata';
+} from '../mockdata';
 
 interface EchartsDashboardPageProps {
   user?: any;

@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
-import { Dashboard } from './components/Dashboard';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Login } from './components/Login';
+import { AppLayout } from './components/AppLayout';
+import { AuthGuard } from './components/AuthGuard';
+import { Dashboard } from './components/Dashboard';
 import { WarehouseManagement } from './components/WarehouseManagement';
 import { BusinessManagement } from './components/BusinessManagement';
 import { Reports } from './components/Reports';
 import { BasicData } from './components/BasicData';
 import { SystemSettings } from './components/SystemSettings';
+import { DamageManagement } from './components/DamageManagement';
+import { InventoryPage } from './components/InventoryPage';
+import { WarehouseEditPage } from './components/WarehouseEditPage';
+import { StandaloneInventoryForm } from './components/StandaloneInventoryForm';
+import EchartsDashboardPage from './components/EchartsDashboardPage';
 import { Toaster } from './components/ui/sonner';
+import { User, UserSession } from './lib/types';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [activeModule, setActiveModule] = useState('dashboard');
-  const [activeSubModule, setActiveSubModule] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   // 检查用户会话
   useEffect(() => {
@@ -33,11 +36,8 @@ export default function App() {
             // 会话有效期8小时
             if (hoursDiff > 8) {
               localStorage.removeItem('userSession');
-              setIsLoggedIn(false);
-              setCurrentUser(null);
+              navigate('/login');
             } else {
-              setIsLoggedIn(true);
-              setCurrentUser(session.user);
               // 更新最后活动时间
               session.lastActivity = new Date().toISOString();
               localStorage.setItem('userSession', JSON.stringify(session));
@@ -45,7 +45,7 @@ export default function App() {
           }
         }
       } catch (error) {
-        console.error('Failed to parse user session:', error);
+        console.error('解析用户会话失败:', error);
         localStorage.removeItem('userSession');
       } finally {
         setIsLoading(false);
@@ -53,99 +53,7 @@ export default function App() {
     };
 
     checkUserSession();
-  }, []);
-
-  // 登录处理
-  const handleLogin = (user) => {
-    const session = {
-      user,
-      loginTime: new Date().toISOString(),
-      lastActivity: new Date().toISOString()
-    };
-    
-    setIsLoggedIn(true);
-    setCurrentUser(user);
-    localStorage.setItem('userSession', JSON.stringify(session));
-    setActiveModule('dashboard');
-    setActiveSubModule(null);
-  };
-
-  // 退出登录处理
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentUser(null);
-    localStorage.removeItem('userSession');
-    setActiveModule('dashboard');
-    setActiveSubModule(null);
-  };
-
-  // 模块切换处理
-  const handleModuleChange = (module, subModule = null) => {
-    setActiveModule(module);
-    setActiveSubModule(subModule);
-  };
-
-  // 渲染当前模块
-  const renderActiveModule = () => {
-    switch (activeModule) {
-      case 'dashboard':
-        return (
-          <Dashboard
-            user={currentUser}
-            activeSubModule={activeSubModule || undefined}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-      
-      case 'warehouse':
-        return (
-          <WarehouseManagement 
-            user={currentUser} 
-            activeSubModule={activeSubModule || undefined}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-      
-      case 'business':
-        return (
-          <BusinessManagement 
-            user={currentUser}
-            activeSubModule={activeSubModule || undefined}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-      
-      case 'reports':
-        return <Reports user={currentUser} />;
-      
-      case 'basicData':
-        return (
-          <BasicData 
-            user={currentUser}
-            activeSubModule={activeSubModule}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-      
-      case 'settings':
-        return (
-          <SystemSettings 
-            user={currentUser}
-            activeSubModule={activeSubModule}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-      
-      default:
-        return (
-          <Dashboard
-            user={currentUser}
-            activeSubModule={activeSubModule || undefined}
-            onSubModuleChange={(subModule) => setActiveSubModule(subModule)}
-          />
-        );
-    }
-  };
+  }, [navigate]);
 
   // 加载状态
   if (isLoading) {
@@ -159,53 +67,52 @@ export default function App() {
     );
   }
 
-  // 未登录状态 - 显示登录页面
-  if (!isLoggedIn) {
-    return (
-      <>
-        <Login onLogin={handleLogin} />
-        <Toaster />
-      </>
-    );
-  }
-
-  // 已登录状态 - 显示主应用界面
   return (
-    <div className="min-h-screen bg-background">
-      {/* 主布局容器 */}
-      <div className="flex h-screen">
-        {/* 侧边栏 */}
-        <div className={`${sidebarCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 flex-shrink-0`}>
-          <Sidebar 
-            activeModule={activeModule}
-            onModuleChange={handleModuleChange}
-            user={currentUser}
-            collapsed={sidebarCollapsed}
-          />
-        </div>
-
-        {/* 主内容区域 */}
-        <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
-          {/* 顶部导航栏 */}
-          <Header 
-            user={currentUser}
-            onLogout={handleLogout}
-            activeModule={activeModule}
-            onModuleChange={handleModuleChange}
-            onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-          />
-
-          {/* 主内容区 */}
-          <main className="flex-1 overflow-y-auto p-6">
-            <div className="max-w-7xl mx-auto">
-              {renderActiveModule()}
-            </div>
-          </main>
-        </div>
-      </div>
-
+    <>
+      <Routes>
+        {/* 公开路由 */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* 需要身份验证的路由 */}
+        <Route path="/" element={<AuthGuard><AppLayout /></AuthGuard>}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="echarts-dashboard" element={<EchartsDashboardPage />} />
+          
+          {/* 仓库管理相关路由 */}
+          <Route path="warehouse">
+            <Route index element={<WarehouseManagement />} />
+            <Route path=":subModule" element={<WarehouseManagement />} />
+          </Route>
+          <Route path="warehouse-edit/:id" element={<WarehouseEditPage />} />
+          <Route path="inventory/:id" element={<InventoryPage />} />
+          
+          {/* 业务管理路由 */}
+          <Route path="business" element={<BusinessManagement />} />
+          
+          {/* 报表管理路由 */}
+          <Route path="reports" element={<Reports />} />
+          
+          {/* 基础数据路由 */}
+          <Route path="basic-data">
+            <Route index element={<BasicData />} />
+            <Route path=":subModule" element={<BasicData />} />
+          </Route>
+          
+          {/* 系统设置路由 */}
+          <Route path="settings" element={<SystemSettings />} />
+          
+          {/* 其他功能路由 */}
+          <Route path="standalone-inventory" element={<StandaloneInventoryForm />} />
+          <Route path="damage-management" element={<DamageManagement />} />
+          
+          {/* 404路由 */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Route>
+      </Routes>
+      
       {/* 全局通知组件 */}
       <Toaster />
-    </div>
+    </>
   );
 }

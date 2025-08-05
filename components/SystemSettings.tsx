@@ -32,7 +32,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { getStatusBadge } from '../lib/utils';
-import { mockUsers, mockRoles, mockWorkflows } from '../../mockdata';
+import { mockUsers, mockRoles, mockWorkflows } from '../mockdata';
 import { UserForm } from './forms/UserForm';
 import { RoleForm } from './forms/RoleForm';
 import { WorkflowForm } from './forms/WorkflowForm';

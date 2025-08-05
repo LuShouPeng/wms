@@ -8,7 +8,7 @@ import {
   warehouseDistributionOption,
   productCategoryOption,
   inboundOutboundOption
-} from '../../mockdata';
+} from '../mockdata';
 
 const EchartsDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
