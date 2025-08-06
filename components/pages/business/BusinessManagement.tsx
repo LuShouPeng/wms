@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import {
   Plus,
   Search,
@@ -38,16 +38,16 @@ import {
   FileText
 } from 'lucide-react';
 // ✅ FIX 1: Integrate utility functions from lib/utils.ts
-import { getStatusBadge } from '../lib/utils';
+import { getStatusBadge } from '../../../lib/utils';
 // ✅ FIX 2: Integrate form components from forms/ folder
-import { WorkflowForm } from './forms/WorkflowForm';
+import { WorkflowForm } from '../../forms/WorkflowForm';
 import { UserForm } from './forms/UserForm';
 import { RoleForm } from './forms/RoleForm';
 // ✅ FIX 3: Integrate mock data from constants
-import { mockUsers, mockWorkflows, purchaseOrders, salesOrders } from '../mockdata';
+import { mockUsers, mockWorkflows, purchaseOrders, salesOrders } from '../../../mockdata';
 // ✅ FIX 8: Add cross-component integration
-import { DamageManagement } from './DamageManagement';
-import { WarehouseManagement } from './WarehouseManagement';
+import { DamageManagement } from '../warehouse/DamageManagement';
+import { WarehouseManagement } from '../warehouse/WarehouseManagement';
 
 // ✅ FIX 5: Add TypeScript interface for props
 interface BusinessManagementProps {
@@ -87,7 +87,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
 
 
   // ✅ FIX 4: Remove duplicate getStatusBadge function - using the one from utils
-  // Now using: import { getStatusBadge } from '../lib/utils';
+  // Now using: import { getStatusBadge } from '../../../lib/utils';
 
   const getStatusIcon = (status: string) => {
     switch (status) {

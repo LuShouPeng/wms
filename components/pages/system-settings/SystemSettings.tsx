@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { 
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import { 
   Table,
   TableBody,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import { 
   Plus, 
   Search, 
@@ -31,11 +31,11 @@ import {
   GitBranch,
   AlertCircle
 } from 'lucide-react';
-import { getStatusBadge } from '../lib/utils';
-import { mockUsers, mockRoles, mockWorkflows } from '../mockdata';
-import { UserForm } from './forms/UserForm';
-import { RoleForm } from './forms/RoleForm';
-import { WorkflowForm } from './forms/WorkflowForm';
+import { getStatusBadge } from '../../../lib/utils';
+import { mockUsers, mockRoles, mockWorkflows } from '../../../mockdata';
+import { UserForm } from '../../forms/UserForm';
+import { RoleForm } from '../../forms/RoleForm';
+import { WorkflowForm } from '../../forms/WorkflowForm';
 
 export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
   const [activeTab, setActiveTab] = useState(activeSubModule || 'users');

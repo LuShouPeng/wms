@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { 
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import { 
   Table,
   TableBody,
@@ -21,14 +21,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../ui/select';
 import { 
   Plus, 
   Search, 
@@ -44,9 +44,9 @@ import {
   Mail,
   DollarSign
 } from 'lucide-react';
-import { getStatusBadge } from '../lib/utils';
-import { WarehouseEditPage } from './WarehouseEditPage';
-import { mockWarehouses, mockMaterials, mockSuppliers } from '../mockdata';
+import { getStatusBadge } from '../../../lib/utils';
+import { WarehouseEditPage } from '../warehouse/WarehouseEditPage';
+import { mockWarehouses, mockMaterials, mockSuppliers } from '../../../mockdata';
 
 interface BasicDataProps {
   user?: any;

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { AlertTriangle, Shield, User, Lock, RefreshCw } from 'lucide-react';
-import { Alert, AlertDescription } from './ui/alert';
-import { mockLoginUsers } from '../mockdata';
+import { Alert, AlertDescription } from '../../ui/alert';
+import { mockLoginUsers } from '../../../mockdata';
 import { User as UserType } from '../lib/types';
 
 interface LoginProps {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Textarea } from '../../ui/textarea';
 import { 
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -23,14 +23,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
+} from '../../ui/alert-dialog';
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../ui/select';
 import { 
   ArrowLeft,
   RefreshCw,
@@ -45,8 +45,8 @@ import {
   FileText,
   Warehouse
 } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../mockdata';
+import { cn } from '../../../lib/utils';
+import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../../../mockdata';
 
 interface WarehouseEditPageProps {
   warehouseId?: string;

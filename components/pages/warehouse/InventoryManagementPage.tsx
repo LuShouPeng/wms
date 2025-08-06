@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Badge } from '../../ui/badge';
 import { 
   Dialog,
   DialogContent,
@@ -11,14 +11,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../ui/select';
 import { 
   Table,
   TableBody,
@@ -26,7 +26,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import { 
   Plus, 
   Search, 
@@ -35,18 +35,17 @@ import {
   Edit,
   Trash2,
   Eye,
-  PackageCheck
+  ClipboardList
 } from 'lucide-react';
-import { mockProducts, inboundOrders, suppliers, warehouses } from '../mockdata';
+import { mockProducts, inventoryOrders, warehouses } from '../../../mockdata';
 
-export function InboundManagementPage() {
+export function InventoryManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   
-  const [inboundForm, setInboundForm] = useState({
-    supplier: '',
+  const [inventoryForm, setInventoryForm] = useState({
     warehouse: '',
     remark: '',
-    items: mockProducts.map(product => ({ ...product, quantity: 0 }))
+    items: mockProducts.map(product => ({ ...product, systemQuantity: 100, actualQuantity: 0, difference: 0 }))
   });
 
   const getStatusBadge = (status: string) => {
@@ -60,13 +59,17 @@ export function InboundManagementPage() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setInboundForm(prev => ({ ...prev, [field]: value }));
+    setInventoryForm(prev => ({ ...prev, [field]: value }));
   };
   
-  const handleItemQuantityChange = (index: number, quantity: number) => {
-    setInboundForm(prev => {
+  const handleItemQuantityChange = (index: number, field: string, value: number) => {
+    setInventoryForm(prev => {
       const newItems = [...prev.items];
-      newItems[index] = { ...newItems[index], quantity };
+      newItems[index] = {
+        ...newItems[index],
+        [field]: value,
+        difference: field === 'actualQuantity' ? value - newItems[index].systemQuantity : newItems[index].difference
+      };
       return { ...prev, items: newItems };
     });
   };
@@ -74,30 +77,17 @@ export function InboundManagementPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send the data to your backend
-    console.log('Inbound form submitted:', inboundForm);
+    console.log('Inventory form submitted:', inventoryForm);
     // Reset form or close dialog
   };
 
-  const InboundForm = () => {
+  const InventoryForm = () => {
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="supplier">供应商</Label>
-            <Select value={inboundForm.supplier} onValueChange={(value) => handleInputChange('supplier', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="选择供应商" />
-              </SelectTrigger>
-              <SelectContent>
-                {suppliers.map(supplier => (
-                  <SelectItem key={supplier.value} value={supplier.value}>{supplier.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="warehouse">入库仓库</Label>
-            <Select value={inboundForm.warehouse} onValueChange={(value) => handleInputChange('warehouse', value)}>
+            <Label htmlFor="inventoryWarehouse">盘点仓库</Label>
+            <Select value={inventoryForm.warehouse} onValueChange={(value) => handleInputChange('warehouse', value)}>
               <SelectTrigger>
                 <SelectValue placeholder="选择仓库" />
               </SelectTrigger>
@@ -120,26 +110,32 @@ export function InboundManagementPage() {
                 <TableHead className="w-40">物料名称</TableHead>
                 <TableHead className="w-24">类别</TableHead>
                 <TableHead className="w-16">单位</TableHead>
-                <TableHead className="w-24">数量</TableHead>
+                <TableHead className="w-24 text-right">系统数量</TableHead>
+                <TableHead className="w-32">实际数量</TableHead>
+                <TableHead className="w-20 text-right">差异</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {inboundForm.items.map((item, index) => (
+              {inventoryForm.items.map((item, index) => (
                 <TableRow key={item.code} className="hover:bg-gray-50">
                   <TableCell className="text-center font-medium">{index + 1}</TableCell>
                   <TableCell className="font-mono">{item.code}</TableCell>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell>{item.unit}</TableCell>
+                  <TableCell className="text-right">{item.systemQuantity}</TableCell>
                   <TableCell>
                     <Input
                       type="number"
-                      placeholder="数量"
+                      placeholder="实际数量"
                       className="w-full"
                       min="0"
-                      value={item.quantity || ''}
-                      onChange={(e) => handleItemQuantityChange(index, parseInt(e.target.value) || 0)}
+                      value={item.actualQuantity || ''}
+                      onChange={(e) => handleItemQuantityChange(index, 'actualQuantity', parseInt(e.target.value) || 0)}
                     />
+                  </TableCell>
+                  <TableCell className={`text-right font-medium ${item.difference > 0 ? "text-red-600" : item.difference < 0 ? "text-green-600" : "text-gray-500"}`}>
+                    {item.difference > 0 ? `+${item.difference}` : item.difference}
                   </TableCell>
                 </TableRow>
               ))}
@@ -148,17 +144,17 @@ export function InboundManagementPage() {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="remark">备注</Label>
+          <Label htmlFor="inventoryRemark">备注</Label>
           <Input
-            id="remark"
-            placeholder="入库备注信息"
-            value={inboundForm.remark}
+            id="inventoryRemark"
+            placeholder="盘点备注信息"
+            value={inventoryForm.remark}
             onChange={(e) => handleInputChange('remark', e.target.value)}
           />
         </div>
         <div className="flex justify-end gap-3 pt-4">
           <Button variant="outline" type="button" className="px-6">取消</Button>
-          <Button type="submit" className="px-6">确认入库</Button>
+          <Button type="submit" className="px-6">开始盘点</Button>
         </div>
       </form>
     );
@@ -168,9 +164,9 @@ export function InboundManagementPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">入库管理</h2>
+          <h2 className="text-2xl font-bold tracking-tight">盘点管理</h2>
           <p className="text-muted-foreground">
-            管理物料入库操作和入库单据
+            管理库存盘点操作和盘点单据
           </p>
         </div>
       </div>
@@ -180,7 +176,7 @@ export function InboundManagementPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索入库单..."
+              placeholder="搜索盘点单..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 w-80"
@@ -200,17 +196,17 @@ export function InboundManagementPage() {
             <DialogTrigger asChild>
               <Button size="sm">
                 <Plus className="h-4 w-4 mr-2" />
-                新增入库单
+                新增盘点单
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-w-5xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>新增入库单</DialogTitle>
+                <DialogTitle>新增盘点单</DialogTitle>
                 <DialogDescription>
-                  填写入库信息，系统将自动更新库存
+                  填写盘点信息，系统将自动更新库存
                 </DialogDescription>
               </DialogHeader>
-              <InboundForm />
+              <InventoryForm />
             </DialogContent>
           </Dialog>
         </div>
@@ -220,26 +216,32 @@ export function InboundManagementPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>入库单号</TableHead>
-              <TableHead>入库日期</TableHead>
-              <TableHead>供应商</TableHead>
-              <TableHead>物料数</TableHead>
-              <TableHead>总价值</TableHead>
+              <TableHead>盘点单号</TableHead>
+              <TableHead>盘点日期</TableHead>
+              <TableHead>盘点仓库</TableHead>
+              <TableHead>盘点物料数</TableHead>
+              <TableHead>差异数量</TableHead>
               <TableHead>状态</TableHead>
               <TableHead>操作员</TableHead>
               <TableHead>操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {inboundOrders.map((order) => {
+            {inventoryOrders.map((order) => {
               const statusInfo = getStatusBadge(order.status);
               return (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{order.date}</TableCell>
-                  <TableCell>{order.supplier}</TableCell>
+                  <TableCell>{order.warehouse}</TableCell>
                   <TableCell>{order.materials}</TableCell>
-                  <TableCell>{order.totalValue}</TableCell>
+                  <TableCell>
+                    {order.differences > 0 ? (
+                      <span className="text-red-600">+{order.differences}</span>
+                    ) : (
+                      <span className="text-green-600">{order.differences}</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={statusInfo.variant}>
                       {statusInfo.label}
@@ -253,9 +255,6 @@ export function InboundManagementPage() {
                       </Button>
                       <Button variant="ghost" size="sm">
                         <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
                   </TableCell>

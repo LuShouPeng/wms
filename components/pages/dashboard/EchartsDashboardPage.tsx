@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
 import { RefreshCw, ArrowLeft, Maximize, Home } from 'lucide-react';
 import {
   inventoryTrendOption,
   warehouseDistributionOption,
   productCategoryOption,
   inboundOutboundOption
-} from '../mockdata';
+} from '../../../mockdata';
 
 interface EchartsDashboardPageProps {
   user?: any;

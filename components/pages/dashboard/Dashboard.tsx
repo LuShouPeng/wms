@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Progress } from './ui/progress';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Progress } from '../../ui/progress';
 import {
   Package,
   ArrowUpDown,
@@ -26,8 +26,8 @@ import {
   Send
 } from 'lucide-react';
 import EchartsDashboardPage from './EchartsDashboardPage';
-import { ReplenishmentDialog } from './ReplenishmentDialog';
-import { mockDashboardData } from '../mockdata';
+import { ReplenishmentDialog } from '../../dialogs/ReplenishmentDialog';
+import { mockDashboardData } from '../../../mockdata';
 
 export function Dashboard({ user, activeSubModule, onSubModuleChange }: {
   user: any;

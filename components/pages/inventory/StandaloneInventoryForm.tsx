@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
 import { 
   Table,
   TableBody,
@@ -9,8 +9,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
-import { mockProducts } from '../mockdata';
+} from '../../ui/table';
+import { mockProducts } from '../../../mockdata';
 
 interface StandaloneInventoryFormProps {
   warehouseId?: string;

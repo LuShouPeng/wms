@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { cn } from '../lib/utils';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { cn } from '../../lib/utils';
 import { 
   LayoutDashboard,
   Package,
@@ -19,7 +19,7 @@ import {
   ClipboardList,
   DollarSign
 } from 'lucide-react';
-import { menuItems } from '../mockdata';
+import { menuItems } from '../../mockdata';
 
 interface SidebarProps {
   activeModule?: string;

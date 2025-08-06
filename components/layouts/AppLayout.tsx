@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import { Toaster } from './ui/sonner';
+import { Toaster } from '../ui/sonner';
 import { User, Module } from '../lib/types';
 
 export function AppLayout() {

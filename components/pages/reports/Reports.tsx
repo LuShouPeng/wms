@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import {
   Table,
   TableBody,
@@ -10,14 +10,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../ui/select';
 import {
   BarChart,
   Bar,
@@ -45,14 +45,14 @@ import {
   DollarSign,
   Send
 } from 'lucide-react';
-import { ReplenishmentDialog } from './ReplenishmentDialog';
+import { ReplenishmentDialog } from '../../dialogs/ReplenishmentDialog';
 import {
   inventoryData,
   stockTrendData,
   categoryData,
   financialData,
   alertData
-} from '../mockdata';
+} from '../../../mockdata';
 
 export function Reports({ user }) {
   const [activeTab, setActiveTab] = useState('inventory');

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { Badge } from './ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Badge } from '../ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '../ui/dropdown-menu';
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../ui/dialog';
 import {
   Bell,
   LogOut,
@@ -40,8 +40,8 @@ import {
   MessageSquare,
   Send
 } from 'lucide-react';
-import { ReplenishmentDialog } from './ReplenishmentDialog';
-import { mockNotifications as notifications } from '../mockdata';
+import { ReplenishmentDialog } from '../dialogs/ReplenishmentDialog';
+import { mockNotifications as notifications } from '../../mockdata';
 
 type Module = 'dashboard' | 'warehouse' | 'business' | 'reports' | 'basicData' | 'settings';
 

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
-import { Checkbox } from './ui/checkbox';
-import { Textarea } from './ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Badge } from '../../ui/badge';
+import { Checkbox } from '../../ui/checkbox';
+import { Textarea } from '../../ui/textarea';
 import { 
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../../ui/dialog';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -24,14 +24,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
+} from '../../ui/alert-dialog';
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../ui/select';
 import { 
   Table,
   TableBody,
@@ -39,7 +39,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '../../ui/table';
 import { 
   Pagination,
   PaginationContent,
@@ -48,7 +48,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from './ui/pagination';
+} from '../../ui/pagination';
 import { 
   Plus, 
   Search, 
@@ -64,8 +64,8 @@ import {
   Clock,
   AlertTriangle
 } from 'lucide-react';
-import { getStatusBadge } from '../lib/utils';
-import { mockDamageRecords, mockProducts, damageTypes } from '../mockdata';
+import { getStatusBadge } from '../../../lib/utils';
+import { mockDamageRecords, mockProducts, damageTypes } from '../../../mockdata';
 
 export function DamageManagement() {
   const [searchTerm, setSearchTerm] = useState('');
