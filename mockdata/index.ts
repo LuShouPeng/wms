@@ -4,6 +4,7 @@ export * from './damageData';
 export * from './productData';
 export * from './loginData';
 export * from './basicData';
+export * from './basicDataPageData';
 export * from './dashboardData';
 export * from './echartsData';
 export * from './reportsData';

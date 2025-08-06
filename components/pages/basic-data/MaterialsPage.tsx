@@ -43,7 +43,7 @@ import {
   Upload
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockMaterials } from '../../../mockdata';
+import { mockMaterials, materialPriceAnalysis } from '../../../mockdata';
 
 export function MaterialsPage() {
   const navigate = useNavigate();
@@ -401,19 +401,19 @@ export function MaterialsPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm">平均单价</span>
-                <span className="font-medium">¥156.8</span>
+                <span className="font-medium">{materialPriceAnalysis.averagePrice}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">最高单价</span>
-                <span className="font-medium text-red-600">¥2,500.0</span>
+                <span className="font-medium text-red-600">{materialPriceAnalysis.maxPrice}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">最低单价</span>
-                <span className="font-medium text-green-600">¥5.5</span>
+                <span className="font-medium text-green-600">{materialPriceAnalysis.minPrice}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">价格变动</span>
-                <span className="font-medium text-orange-600">+5.2%</span>
+                <span className="font-medium text-orange-600">{materialPriceAnalysis.priceChange}</span>
               </div>
             </div>
           </CardContent>

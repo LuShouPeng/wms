@@ -45,7 +45,7 @@ import {
   Upload
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockSuppliers } from '../../../mockdata';
+import { mockSuppliers, supplierCooperationAnalysis } from '../../../mockdata';
 
 export function SuppliersPage() {
   const navigate = useNavigate();
@@ -380,23 +380,23 @@ export function SuppliersPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm">合作率</span>
-                <span className="font-medium text-green-600">85.3%</span>
+                <span className="font-medium text-green-600">{supplierCooperationAnalysis.cooperationRate}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">平均合作时长</span>
-                <span className="font-medium">2.3年</span>
+                <span className="font-medium">{supplierCooperationAnalysis.averageCooperationDuration}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">质量评分</span>
-                <span className="font-medium text-blue-600">4.2/5.0</span>
+                <span className="font-medium text-blue-600">{supplierCooperationAnalysis.qualityScore}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">交付准时率</span>
-                <span className="font-medium text-purple-600">92.6%</span>
+                <span className="font-medium text-purple-600">{supplierCooperationAnalysis.onTimeDeliveryRate}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">新增供应商</span>
-                <span className="font-medium text-orange-600">+12</span>
+                <span className="font-medium text-orange-600">{supplierCooperationAnalysis.newSuppliers}</span>
               </div>
             </div>
           </CardContent>
