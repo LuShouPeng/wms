@@ -12,3 +12,4 @@ export * from './warehouseEditData';
 export * from './replenishmentData';
 export * from './sidebarData';
 export * from './warehouseManagementData';
+export * from './businessData';

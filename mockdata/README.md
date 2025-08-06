@@ -12,7 +12,16 @@ mockdata/
 ├── damageData.ts      # 报损管理相关数据
 ├── productData.ts     # 产品基础数据
 ├── loginData.ts       # 登录用户数据
-└── basicData.ts       # 基础资料数据（仓库、物料、供应商）
+├── basicData.ts       # 基础资料数据（仓库、物料、供应商）
+├── businessData.ts    # 业务管理相关数据（采购订单、销售订单）
+├── replenishmentData.ts    # 补货管理相关数据
+├── dashboardData.ts   # 仪表盘数据
+├── echartsData.ts     # 图表数据
+├── reportsData.ts     # 报表数据
+├── headerData.ts      # 头部数据
+├── warehouseEditData.ts    # 仓库编辑数据
+├── sidebarData.ts     # 侧边栏数据
+└── warehouseManagementData.ts  # 仓库管理数据
 ```
 
 ## 数据说明
@@ -36,6 +45,10 @@ mockdata/
 - `mockWarehouses`: 仓库信息数据
 - `mockMaterials`: 物料档案数据
 - `mockSuppliers`: 供应商信息数据
+
+### businessData.ts
+- `purchaseOrders`: 采购订单数据
+- `salesOrders`: 销售订单数据
 
 ## 使用方式
 

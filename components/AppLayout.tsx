@@ -55,6 +55,14 @@ export function AppLayout() {
     const module = getActiveModuleFromPath();
     const subModule = getActiveSubModuleFromPath();
     
+    console.log('AppLayout: Route change detected', {
+      pathname: location.pathname,
+      detectedModule: module,
+      detectedSubModule: subModule,
+      previousModule: activeModule,
+      previousSubModule: activeSubModule
+    });
+    
     setActiveModule(module);
     setActiveSubModule(subModule);
   }, [location.pathname]);
@@ -67,6 +75,14 @@ export function AppLayout() {
 
   // 模块切换处理
   const handleModuleChange = (moduleId: string, subModuleId?: string) => {
+    console.log('AppLayout: handleModuleChange called', {
+      moduleId,
+      subModuleId,
+      currentPath: location.pathname,
+      currentModule: activeModule,
+      currentSubModule: activeSubModule
+    });
+    
     const module = moduleId as Module;
     setActiveModule(module);
     setActiveSubModule(subModuleId || null);
@@ -75,6 +91,23 @@ export function AppLayout() {
     let path = `/${moduleId}`;
     if (subModuleId) {
       path = `${path}/${subModuleId}`;
+    }
+    
+    console.log('AppLayout: Navigating to path', path);
+    console.log('AppLayout: Route check - basic-data route exists:', path.startsWith('/basic-data'));
+    
+    // 特殊处理基础资料模块，确保子模块正确导航
+    if (moduleId === 'basicData' && subModuleId) {
+      console.log('AppLayout: Special handling for basicData subModule:', subModuleId);
+      // 确保路径格式正确
+      path = `/basic-data/${subModuleId}`;
+    }
+    
+    // 特殊处理仪表盘模块，确保子模块正确导航
+    if (moduleId === 'dashboard' && subModuleId) {
+      console.log('AppLayout: Special handling for dashboard subModule:', subModuleId);
+      // 确保路径格式正确
+      path = `/dashboard/${subModuleId}`;
     }
     
     navigate(path);

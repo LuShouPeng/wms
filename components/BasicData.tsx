@@ -66,22 +66,47 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
 
   // 当路由参数或activeSubModule改变时，更新activeTab
   useEffect(() => {
+    console.log('BasicData: useEffect triggered', {
+      subModule,
+      activeSubModule,
+      currentActiveTab: activeTab,
+      params: params
+    });
+    
     if (subModule) {
+      console.log('BasicData: Setting activeTab from subModule', subModule);
       setActiveTab(subModule);
     } else if (activeSubModule) {
+      console.log('BasicData: Setting activeTab from activeSubModule', activeSubModule);
       setActiveTab(activeSubModule);
     }
   }, [subModule, activeSubModule]);
 
   // 当tab改变时，更新路由并通知父组件
   const handleTabChange = (value: string) => {
+    console.log('BasicData: handleTabChange called', {
+      newValue: value,
+      currentValue: activeTab,
+      subModule: subModule,
+      activeSubModule: activeSubModule
+    });
+    
+    // 如果点击的tab与当前tab相同，不进行重复导航
+    if (value === activeTab) {
+      console.log('BasicData: Tab already active, skipping navigation');
+      return;
+    }
+    
     setActiveTab(value);
     
     // 更新路由
-    navigate(`/basic-data/${value}`);
+    const newPath = `/basic-data/${value}`;
+    console.log('BasicData: Navigating to', newPath);
+    navigate(newPath);
     
     // 如果有回调函数，则调用
     if (onSubModuleChange) {
+      console.log('BasicData: Calling onSubModuleChange with', value);
       onSubModuleChange(value);
     }
   };

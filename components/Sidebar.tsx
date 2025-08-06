@@ -125,11 +125,18 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
                   !isActive && "hover:bg-gray-100"
                 )}
                 onClick={() => {
+                  console.log('Sidebar: Menu item clicked', { itemId: item.id, hasSubItems, collapsed, isExpanded });
+                  
+                  // 如果有子项且未折叠，只展开/折叠子菜单，不进行导航
                   if (hasSubItems && !collapsed) {
+                    console.log('Sidebar: Toggling expanded for', item.id);
                     toggleExpanded(item.id);
-                  } else {
-                    onModuleChange?.(item.id);
+                    return; // 不进行导航，让用户选择具体的子菜单项
                   }
+                  
+                  // 如果没有子项，或者处于折叠状态，直接导航到主模块
+                  console.log('Sidebar: Navigating to module', item.id);
+                  onModuleChange?.(item.id);
                 }}
               >
                 <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -164,7 +171,18 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
                       key={subItem.id}
                       variant="ghost"
                       className="w-full justify-start gap-3 h-auto p-2 text-sm"
-                      onClick={() => onModuleChange?.(item.id, subItem.id)}
+                      onClick={() => {
+                        console.log('Sidebar: Sub-menu item clicked', {
+                          parentId: item.id,
+                          subItemId: subItem.id,
+                          fullPath: `/${item.id}/${subItem.id}`
+                        });
+                        
+                        // 确保子菜单项点击时正确导航
+                        if (onModuleChange) {
+                          onModuleChange(item.id, subItem.id);
+                        }
+                      }}
                     >
                       <subItem.icon className="h-3 w-3 flex-shrink-0 opacity-70" />
                       <span>{subItem.label}</span>
