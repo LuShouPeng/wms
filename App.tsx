@@ -5,6 +5,11 @@ import { AppLayout } from './components/AppLayout';
 import { AuthGuard } from './components/AuthGuard';
 import { Dashboard } from './components/Dashboard';
 import { WarehouseManagement } from './components/WarehouseManagement';
+import { WarehouseHomePage } from './components/WarehouseHomePage';
+import { InboundManagementPage } from './components/InboundManagementPage';
+import { OutboundManagementPage } from './components/OutboundManagementPage';
+import { TransferManagementPage } from './components/TransferManagementPage';
+import { InventoryManagementPage } from './components/InventoryManagementPage';
 import { BusinessManagement } from './components/BusinessManagement';
 import { Reports } from './components/Reports';
 import { BasicData } from './components/BasicData';
@@ -137,8 +142,12 @@ export default function App() {
           
           {/* 仓库管理相关路由 */}
           <Route path="warehouse">
-            <Route index element={<WarehouseManagement />} />
-            <Route path=":subModule" element={<WarehouseManagement />} />
+            <Route index element={<WarehouseHomePage />} />
+            <Route path="inbound" element={<InboundManagementPage />} />
+            <Route path="outbound" element={<OutboundManagementPage />} />
+            <Route path="transfer" element={<TransferManagementPage />} />
+            <Route path="inventory" element={<InventoryManagementPage />} />
+            <Route path="damage" element={<DamageManagement />} />
           </Route>
           <Route path="warehouse-edit/:id" element={<WarehouseEditPage />} />
           <Route path="inventory/:id" element={<InventoryPage />} />

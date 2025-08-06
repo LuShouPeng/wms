@@ -127,6 +127,13 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
                 onClick={() => {
                   console.log('Sidebar: Menu item clicked', { itemId: item.id, hasSubItems, collapsed, isExpanded });
                   
+                  // 特殊处理仓库管理模块，点击主菜单项时导航到仓库主页
+                  if (item.id === 'warehouse' && hasSubItems && !collapsed) {
+                    console.log('Sidebar: Navigating to warehouse home', item.id);
+                    onModuleChange?.(item.id);
+                    return;
+                  }
+                  
                   // 如果有子项且未折叠，只展开/折叠子菜单，不进行导航
                   if (hasSubItems && !collapsed) {
                     console.log('Sidebar: Toggling expanded for', item.id);
