@@ -14,7 +14,10 @@ import {
   Building,
   Truck,
   ClipboardList,
-  DollarSign
+  DollarSign,
+  PieChart,
+  Activity,
+  Bell
 } from 'lucide-react';
 
 export const menuItems = [
@@ -46,13 +49,12 @@ export const menuItems = [
     id: 'business',
     label: '业务管理',
     icon: ShoppingCart,
-    description: '采购/销售/审批/仓库/报损',
-    badge: '5',
+    description: '采购/销售/审批/报损',
+    badge: '4',
     subItems: [
       { id: 'purchase', label: '采购管理', icon: ShoppingCart },
       { id: 'sales', label: '销售管理', icon: DollarSign },
       { id: 'workflow', label: '审批流程', icon: FileText },
-      { id: 'business-warehouse', label: '仓库管理', icon: Warehouse },
       { id: 'business-damage', label: '报损管理', icon: AlertTriangle }
     ]
   },
@@ -60,7 +62,13 @@ export const menuItems = [
     id: 'reports',
     label: '报表管理',
     icon: BarChart3,
-    description: '数据分析与报表生成'
+    description: '数据分析与报表生成',
+    subItems: [
+      { id: 'inventory', label: '库存报表', icon: Package },
+      { id: 'financial', label: '财务报表', icon: DollarSign },
+      { id: 'analysis', label: '趋势分析', icon: Activity },
+      { id: 'alerts', label: '预警报表', icon: Bell }
+    ]
   },
   {
     id: 'basicData',

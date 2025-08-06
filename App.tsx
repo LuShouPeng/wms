@@ -11,9 +11,26 @@ import { OutboundManagementPage } from './components/pages/warehouse/OutboundMan
 import { TransferManagementPage } from './components/pages/warehouse/TransferManagementPage';
 import { InventoryManagementPage } from './components/pages/warehouse/InventoryManagementPage';
 import { BusinessManagement } from './components/pages/business/BusinessManagement';
-import { Reports } from './components/pages/reports/Reports';
+import { BusinessHomePage } from './components/pages/business/BusinessHomePage';
+import { PurchaseManagementPage } from './components/pages/business/PurchaseManagementPage';
+import { SalesManagementPage } from './components/pages/business/SalesManagementPage';
+import { WorkflowManagementPage } from './components/pages/business/WorkflowManagementPage';
+import { BusinessDamagePage } from './components/pages/business/BusinessDamagePage';
+import { ReportsHomePage } from './components/pages/reports/ReportsHomePage';
+import { InventoryReportsPage } from './components/pages/reports/InventoryReportsPage';
+import { FinancialReportsPage } from './components/pages/reports/FinancialReportsPage';
+import { TrendAnalysisPage } from './components/pages/reports/TrendAnalysisPage';
+import { AlertsReportsPage } from './components/pages/reports/AlertsReportsPage';
 import { BasicData } from './components/pages/basic-data/BasicData';
+import { BasicDataHomePage } from './components/pages/basic-data/BasicDataHomePage';
+import { WarehousesPage } from './components/pages/basic-data/WarehousesPage';
+import { MaterialsPage } from './components/pages/basic-data/MaterialsPage';
+import { SuppliersPage } from './components/pages/basic-data/SuppliersPage';
 import { SystemSettings } from './components/pages/system-settings/SystemSettings';
+import { SystemSettingsHomePage } from './components/pages/system-settings/SystemSettingsHomePage';
+import { UsersPage } from './components/pages/system-settings/UsersPage';
+import { RolesPage } from './components/pages/system-settings/RolesPage';
+import { WorkflowsPage } from './components/pages/system-settings/WorkflowsPage';
 import { DamageManagement } from './components/pages/warehouse/DamageManagement';
 import { InventoryPage } from './components/pages/inventory/InventoryPage';
 import { WarehouseEditPage } from './components/pages/warehouse/WarehouseEditPage';
@@ -154,33 +171,36 @@ export default function App() {
           
           {/* 业务管理路由 */}
           <Route path="business">
-            <Route index element={<BusinessManagement />} />
-            <Route path=":subModule" element={<BusinessManagement />} />
+            <Route index element={<BusinessHomePage />} />
+            <Route path="purchase" element={<PurchaseManagementPage />} />
+            <Route path="sales" element={<SalesManagementPage />} />
+            <Route path="workflow" element={<WorkflowManagementPage />} />
+            <Route path="business-damage" element={<BusinessDamagePage />} />
           </Route>
           
           {/* 报表管理路由 */}
-          <Route path="reports" element={<Reports />} />
+          <Route path="reports">
+            <Route index element={<ReportsHomePage />} />
+            <Route path="inventory" element={<InventoryReportsPage />} />
+            <Route path="financial" element={<FinancialReportsPage />} />
+            <Route path="analysis" element={<TrendAnalysisPage />} />
+            <Route path="alerts" element={<AlertsReportsPage />} />
+          </Route>
           
           {/* 基础数据路由 */}
           <Route path="basic-data">
-            <Route index element={
-              (() => {
-                console.log('App: BasicData index route rendered');
-                return <BasicData />;
-              })()
-            } />
-            <Route path=":subModule" element={
-              (() => {
-                console.log('App: BasicData subModule route rendered');
-                return <BasicData />;
-              })()
-            } />
+            <Route index element={<BasicDataHomePage />} />
+            <Route path="warehouses" element={<WarehousesPage />} />
+            <Route path="materials" element={<MaterialsPage />} />
+            <Route path="suppliers" element={<SuppliersPage />} />
           </Route>
           
           {/* 系统设置路由 */}
           <Route path="settings">
-            <Route index element={<SystemSettings />} />
-            <Route path=":subModule" element={<SystemSettings />} />
+            <Route index element={<SystemSettingsHomePage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="roles" element={<RolesPage />} />
+            <Route path="workflows" element={<WorkflowsPage />} />
           </Route>
           
           {/* 其他功能路由 */}

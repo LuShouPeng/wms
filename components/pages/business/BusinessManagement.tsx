@@ -65,7 +65,6 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
     if (activeSubModule) {
       // 处理从侧边栏传来的业务管理子模块ID映射
       const moduleMapping: Record<string, string> = {
-        'business-warehouse': 'warehouse',
         'business-damage': 'damage',
         'workflow': 'workflow',
         'purchase': 'purchase',
