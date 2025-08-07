@@ -30,7 +30,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockUsers } from '../../../mockdata';
+import { mockUsers } from '../../../mockdata/systemData';
+import { userStats } from '../../../mockdata/systemData';
 import { UserForm } from '../../forms/UserForm';
 
 export function UsersPage() {
@@ -107,7 +108,7 @@ export function UsersPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">15</div>
+            <div className="text-2xl font-bold">{userStats.todayLogin}</div>
             <p className="text-xs text-muted-foreground">
               今日活跃用户
             </p>
@@ -120,7 +121,7 @@ export function UsersPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold">{userStats.newUsersThisMonth}</div>
             <p className="text-xs text-muted-foreground">
               本月新增
             </p>

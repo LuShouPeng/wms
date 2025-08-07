@@ -24,6 +24,13 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import {
+  alertsData,
+  alertTypeStats,
+  alertProcessingStats,
+  severityOptions,
+  typeOptions
+} from '../../../mockdata/alertsData';
 
 export function AlertsReportsPage() {
   const navigate = useNavigate();
@@ -31,124 +38,14 @@ export function AlertsReportsPage() {
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
 
-  // 预警数据
-  const alertsData = [
-    {
-      id: 1,
-      type: 'low_stock',
-      typeName: '库存不足',
-      material: 'LED灯珠',
-      code: 'LED-001',
-      currentStock: 50,
-      minStock: 100,
-      maxStock: 500,
-      severity: 'high',
-      severityName: '高',
-      location: 'A-01-01',
-      lastUpdate: '2024-01-15 09:30',
-      status: 'active',
-      description: '当前库存低于安全库存，建议立即补货'
-    },
-    {
-      id: 2,
-      type: 'overstock',
-      typeName: '库存过量',
-      material: '电阻器',
-      code: 'RES-002',
-      currentStock: 2800,
-      minStock: 200,
-      maxStock: 1000,
-      severity: 'medium',
-      severityName: '中',
-      location: 'B-02-03',
-      lastUpdate: '2024-01-15 08:45',
-      status: 'active',
-      description: '库存超过最大库存量，占用仓储空间'
-    },
-    {
-      id: 3,
-      type: 'expired',
-      typeName: '即将过期',
-      material: '化学试剂A',
-      code: 'CHE-003',
-      currentStock: 150,
-      minStock: 50,
-      maxStock: 300,
-      severity: 'high',
-      severityName: '高',
-      location: 'C-01-05',
-      lastUpdate: '2024-01-15 07:20',
-      status: 'active',
-      description: '物料将在7天内过期，需要优先使用或处理'
-    },
-    {
-      id: 4,
-      type: 'slow_moving',
-      typeName: '呆滞物料',
-      material: '旧版芯片',
-      code: 'CHIP-004',
-      currentStock: 500,
-      minStock: 100,
-      maxStock: 800,
-      severity: 'medium',
-      severityName: '中',
-      location: 'D-03-02',
-      lastUpdate: '2024-01-14 16:30',
-      status: 'active',
-      description: '90天内无出库记录，建议检查物料状态'
-    },
-    {
-      id: 5,
-      type: 'quality',
-      typeName: '质量异常',
-      material: '精密零件',
-      code: 'PRE-005',
-      currentStock: 80,
-      minStock: 50,
-      maxStock: 200,
-      severity: 'high',
-      severityName: '高',
-      location: 'E-01-08',
-      lastUpdate: '2024-01-14 14:15',
-      status: 'active',
-      description: '检测到质量异常，需要隔离检查'
-    },
-    {
-      id: 6,
-      type: 'location',
-      typeName: '位置异常',
-      material: '标准螺丝',
-      code: 'SCR-006',
-      currentStock: 1200,
-      minStock: 500,
-      maxStock: 2000,
-      severity: 'low',
-      severityName: '低',
-      location: '位置未知',
-      lastUpdate: '2024-01-14 11:20',
-      status: 'active',
-      description: '物料位置信息不匹配，需要重新定位'
-    }
-  ];
-
   // 统计数据
   const alertStats = {
     total: alertsData.length,
     high: alertsData.filter(item => item.severity === 'high').length,
     medium: alertsData.filter(item => item.severity === 'medium').length,
     low: alertsData.filter(item => item.severity === 'low').length,
-    resolved: 12 // 本月已解决
+    resolved: alertProcessingStats.monthlyResolved // 本月已解决
   };
-
-  // 预警类型统计
-  const alertTypeStats = [
-    { type: '库存不足', count: 15, percentage: 35 },
-    { type: '库存过量', count: 8, percentage: 19 },
-    { type: '即将过期', count: 6, percentage: 14 },
-    { type: '呆滞物料', count: 7, percentage: 16 },
-    { type: '质量异常', count: 4, percentage: 9 },
-    { type: '位置异常', count: 3, percentage: 7 }
-  ];
 
   // 筛选数据
   const filteredAlerts = alertsData.filter(alert => {
@@ -323,10 +220,11 @@ export function AlertsReportsPage() {
             <SelectValue placeholder="预警级别" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">全部级别</SelectItem>
-            <SelectItem value="high">高级预警</SelectItem>
-            <SelectItem value="medium">中级预警</SelectItem>
-            <SelectItem value="low">低级预警</SelectItem>
+            {severityOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Select value={selectedType} onValueChange={setSelectedType}>
@@ -334,13 +232,11 @@ export function AlertsReportsPage() {
             <SelectValue placeholder="预警类型" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">全部类型</SelectItem>
-            <SelectItem value="low_stock">库存不足</SelectItem>
-            <SelectItem value="overstock">库存过量</SelectItem>
-            <SelectItem value="expired">即将过期</SelectItem>
-            <SelectItem value="slow_moving">呆滞物料</SelectItem>
-            <SelectItem value="quality">质量异常</SelectItem>
-            <SelectItem value="location">位置异常</SelectItem>
+            {typeOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -459,11 +355,11 @@ export function AlertsReportsPage() {
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm">平均处理时间</span>
-              <span className="font-medium">2.3 小时</span>
+              <span className="font-medium">{alertProcessingStats.averageProcessingTime}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">处理成功率</span>
-              <span className="font-medium text-green-600">94.5%</span>
+              <span className="font-medium text-green-600">{alertProcessingStats.processingSuccessRate}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">待处理预警</span>
@@ -471,7 +367,7 @@ export function AlertsReportsPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">本月新增预警</span>
-              <span className="font-medium">28 条</span>
+              <span className="font-medium">{alertProcessingStats.monthlyNewAlerts} 条</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm">本月已解决</span>

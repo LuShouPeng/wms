@@ -30,31 +30,14 @@ import {
   Calendar
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { stockTrendData } from '../../../mockdata';
+import { stockTrendData, forecastData, turnoverData, trendInsights } from '../../../mockdata/reportsData';
 
 export function TrendAnalysisPage() {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedMetric, setSelectedMetric] = useState('stock');
 
-  // 预测数据（基于历史趋势）
-  const forecastData = [
-    ...stockTrendData,
-    { month: '7月', inbound: 4200, outbound: 3800, stock: 14000 },
-    { month: '8月', inbound: 3900, outbound: 4200, stock: 13700 },
-    { month: '9月', inbound: 4500, outbound: 3600, stock: 14600 }
-  ];
-
-  // 库存周转率数据
-  const turnoverData = [
-    { month: '1月', turnoverRate: 2.1, efficiency: 85 },
-    { month: '2月', turnoverRate: 2.3, efficiency: 87 },
-    { month: '3月', turnoverRate: 2.0, efficiency: 82 },
-    { month: '4月', turnoverRate: 2.5, efficiency: 89 },
-    { month: '5月', turnoverRate: 2.4, efficiency: 88 },
-    { month: '6月', turnoverRate: 2.6, efficiency: 91 }
-  ];
-
+  
   // 计算趋势统计
   const currentMonth = stockTrendData[stockTrendData.length - 1];
   const previousMonth = stockTrendData[stockTrendData.length - 2];
@@ -290,18 +273,12 @@ export function TrendAnalysisPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-sm">
-              <div className="font-medium">库存周转率提升</div>
-              <div className="text-muted-foreground">6月周转率达到2.6，创6个月新高</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">运营效率稳步提升</div>
-              <div className="text-muted-foreground">平均效率从85%提升至91%</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">出库量保持稳定</div>
-              <div className="text-muted-foreground">月度出库量维持在3800-4100区间</div>
-            </div>
+            {trendInsights.positive.map((insight, index) => (
+              <div key={index} className="text-sm">
+                <div className="font-medium">{insight.title}</div>
+                <div className="text-muted-foreground">{insight.description}</div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -313,18 +290,12 @@ export function TrendAnalysisPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-sm">
-              <div className="font-medium">入库量波动较大</div>
-              <div className="text-muted-foreground">3月入库量激增后，4-6月逐步下降</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">库存水位偏高</div>
-              <div className="text-muted-foreground">当前库存13,600，建议优化库存结构</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">季节性波动明显</div>
-              <div className="text-muted-foreground">需要建立更好的需求预测机制</div>
-            </div>
+            {trendInsights.concerns.map((insight, index) => (
+              <div key={index} className="text-sm">
+                <div className="font-medium">{insight.title}</div>
+                <div className="text-muted-foreground">{insight.description}</div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -336,18 +307,12 @@ export function TrendAnalysisPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-sm">
-              <div className="font-medium">优化采购计划</div>
-              <div className="text-muted-foreground">基于历史数据建立更精准的采购预测</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">提升库存周转</div>
-              <div className="text-muted-foreground">目标周转率提升到3.0以上</div>
-            </div>
-            <div className="text-sm">
-              <div className="font-medium">加强需求管理</div>
-              <div className="text-muted-foreground">建立动态需求预测和库存调整机制</div>
-            </div>
+            {trendInsights.recommendations.map((insight, index) => (
+              <div key={index} className="text-sm">
+                <div className="font-medium">{insight.title}</div>
+                <div className="text-muted-foreground">{insight.description}</div>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>

@@ -45,7 +45,7 @@ import {
   Eye
 } from 'lucide-react';
 import { DamageManagement } from './DamageManagement';
-import { mockProducts, inboundOrders, outboundOrders, transferOrders, inventoryOrders, suppliers, warehouses, departments } from '../../../mockdata';
+import { mockProducts, inboundOrders, outboundOrders, transferOrders, inventoryOrders, warehouseSuppliers as suppliers, warehouseOptions as warehouses, warehouseDepartments as departments, warehouseStats } from '../../../mockdata';
 
 interface WarehouseManagementProps {
   user?: any;
@@ -962,7 +962,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
               <PackageCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">23</div>
+              <div className="text-2xl font-bold">{warehouseStats.todayInbound}</div>
               <p className="text-xs text-muted-foreground">
                 +3 从昨日
               </p>
@@ -975,7 +975,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
               <PackageX className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">18</div>
+              <div className="text-2xl font-bold">{warehouseStats.todayOutbound}</div>
               <p className="text-xs text-muted-foreground">
                 -2 从昨日
               </p>
@@ -988,7 +988,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
               <Truck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">5</div>
+              <div className="text-2xl font-bold">{warehouseStats.transferOperations}</div>
               <p className="text-xs text-muted-foreground">
                 +1 从昨日
               </p>
@@ -1001,7 +1001,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">8</div>
+              <div className="text-2xl font-bold">{warehouseStats.damageRecords}</div>
               <p className="text-xs text-muted-foreground">
                 本月新增
               </p>
@@ -1014,7 +1014,7 @@ export function WarehouseManagement({ user, activeSubModule, onSubModuleChange }
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">{warehouseStats.alerts}</div>
               <p className="text-xs text-muted-foreground">
                 需要处理
               </p>

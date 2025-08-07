@@ -43,7 +43,9 @@ import {
   Upload
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockMaterials, materialPriceAnalysis } from '../../../mockdata';
+import { mockMaterials } from '../../../mockdata/basicData';
+import { materialPriceAnalysis } from '../../../mockdata/basicDataPageData';
+import { materialCategories, materialUnits, materialSuppliers, materialStatuses } from '../../../mockdata/materials';
 
 export function MaterialsPage() {
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ export function MaterialsPage() {
   // 统计数据
   const totalMaterials = mockMaterials.length;
   const activeMaterials = mockMaterials.filter(m => m.status === 'active').length;
-  const lowStockMaterials = mockMaterials.filter(m => parseInt(m.minStock) > 50).length; // 假设库存数据
+  const lowStockMaterials = mockMaterials.filter(m => m.minStock > 50).length; // 假设库存数据
   const categories = [...new Set(mockMaterials.map(m => m.category))].length;
 
   const MaterialForm = () => (
@@ -88,10 +90,9 @@ export function MaterialsPage() {
               <SelectValue placeholder="选择分类" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="hardware">五金件</SelectItem>
-              <SelectItem value="electronic">电子元件</SelectItem>
-              <SelectItem value="cable">电缆线材</SelectItem>
-              <SelectItem value="mechanical">机械零件</SelectItem>
+              {materialCategories.map((category) => (
+                <SelectItem key={category} value={category}>{category}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -102,10 +103,9 @@ export function MaterialsPage() {
               <SelectValue placeholder="选择单位" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="piece">个</SelectItem>
-              <SelectItem value="meter">米</SelectItem>
-              <SelectItem value="kg">千克</SelectItem>
-              <SelectItem value="box">箱</SelectItem>
+              {materialUnits.map((unit) => (
+                <SelectItem key={unit.value} value={unit.value}>{unit.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -118,9 +118,9 @@ export function MaterialsPage() {
               <SelectValue placeholder="选择供应商" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sup1">供应商A</SelectItem>
-              <SelectItem value="sup2">供应商B</SelectItem>
-              <SelectItem value="sup3">供应商C</SelectItem>
+              {materialSuppliers.map((supplier) => (
+                <SelectItem key={supplier.value} value={supplier.value}>{supplier.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -251,10 +251,9 @@ export function MaterialsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">全部分类</SelectItem>
-                  <SelectItem value="五金件">五金件</SelectItem>
-                  <SelectItem value="电子元件">电子元件</SelectItem>
-                  <SelectItem value="电缆线材">电缆线材</SelectItem>
-                  <SelectItem value="机械零件">机械零件</SelectItem>
+                  {materialCategories.map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
@@ -263,9 +262,9 @@ export function MaterialsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">全部状态</SelectItem>
-                  <SelectItem value="active">正常</SelectItem>
-                  <SelectItem value="inactive">停用</SelectItem>
-                  <SelectItem value="discontinued">停产</SelectItem>
+                  {materialStatuses.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>{status.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -318,7 +317,7 @@ export function MaterialsPage() {
                       <TableCell>{material.price}</TableCell>
                       <TableCell>{material.minStock}</TableCell>
                       <TableCell>
-                        <Badge variant={statusInfo.variant as any}>
+                        <Badge variant={statusInfo.variant}>
                           {statusInfo.label}
                         </Badge>
                       </TableCell>
@@ -365,9 +364,9 @@ export function MaterialsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {['五金件', '电子元件', '电缆线材', '机械零件'].map((category) => {
+              {materialCategories.map((category) => {
                 const count = mockMaterials.filter(m => m.category === category).length;
-                const percentage = Math.round((count / totalMaterials) * 100);
+                const percentage = totalMaterials > 0 ? Math.round((count / totalMaterials) * 100) : 0;
                 return (
                   <div key={category} className="flex items-center justify-between">
                     <span className="text-sm font-medium">{category}</span>

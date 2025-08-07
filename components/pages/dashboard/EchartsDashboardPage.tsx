@@ -8,7 +8,8 @@ import {
   warehouseDistributionOption,
   productCategoryOption,
   inboundOutboundOption
-} from '../../../mockdata';
+} from '../../../mockdata/echartsData';
+import { realTimeData, timeRangeOptions } from '../../../mockdata/dashboard';
 
 interface EchartsDashboardPageProps {
   user?: any;
@@ -58,30 +59,17 @@ const EchartsDashboardPage: React.FC<EchartsDashboardPageProps> = ({
         </div>
         <div className="flex flex-wrap gap-2">
           <div className="flex bg-gray-100 rounded-lg p-1">
-            <Button
-              variant={timeRange === '7d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('7d')}
-            >
-              7天
-            </Button>
-            <Button
-              variant={timeRange === '30d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('30d')}
-            >
-              30天
-            </Button>
-            <Button
-              variant={timeRange === '90d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('90d')}
-            >
-              90天
-            </Button>
+            {timeRangeOptions.map((option) => (
+              <Button
+                key={option.value}
+                variant={timeRange === option.value ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8"
+                onClick={() => handleTimeRangeChange(option.value)}
+              >
+                {option.label}
+              </Button>
+            ))}
           </div>
           <Button 
             variant="outline" 
@@ -97,26 +85,21 @@ const EchartsDashboardPage: React.FC<EchartsDashboardPageProps> = ({
 
       {/* Real-time Data Panel */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
-          <div className="text-sm opacity-90 mb-2">总库存</div>
-          <div className="text-3xl font-bold mb-1">1,256</div>
-          <div className="text-xs opacity-75">+12% 同比增长</div>
-        </div>
-        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
-          <div className="text-sm opacity-90 mb-2">可用库存</div>
-          <div className="text-3xl font-bold mb-1">892</div>
-          <div className="text-xs opacity-75">+8% 同比增长</div>
-        </div>
-        <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl shadow-lg">
-          <div className="text-sm opacity-90 mb-2">预警库存</div>
-          <div className="text-3xl font-bold mb-1">23</div>
-          <div className="text-xs opacity-75">-5% 同比下降</div>
-        </div>
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
-          <div className="text-sm opacity-90 mb-2">周转率</div>
-          <div className="text-3xl font-bold mb-1">85%</div>
-          <div className="text-xs opacity-75">健康水平</div>
-        </div>
+        {realTimeData.map((item, index) => (
+          <div
+            key={index}
+            className={`bg-gradient-to-br ${
+              index === 0 ? 'from-purple-500 to-purple-600' :
+              index === 1 ? 'from-green-500 to-green-600' :
+              index === 2 ? 'from-yellow-500 to-yellow-600' :
+              'from-blue-500 to-blue-600'
+            } text-white p-6 rounded-xl shadow-lg`}
+          >
+            <div className="text-sm opacity-90 mb-2">{item.label}</div>
+            <div className="text-3xl font-bold mb-1">{item.value}</div>
+            <div className="text-xs opacity-75">{item.change}</div>
+          </div>
+        ))}
       </div>
 
       {/* Charts Grid */}

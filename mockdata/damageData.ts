@@ -98,3 +98,11 @@ export const damageTypes = [
   { value: '丢失报损', label: '丢失报损', description: '产品丢失或无法找到' },
   { value: '其他报损', label: '其他报损', description: '质量问题、过期等其他原因' }
 ];
+
+// 报损状态选项
+export const damageStatusOptions = [
+  { value: 'all', label: '全部状态' },
+  { value: 'pending', label: '待审核' },
+  { value: 'approved', label: '已通过' },
+  { value: 'rejected', label: '已拒绝' }
+];

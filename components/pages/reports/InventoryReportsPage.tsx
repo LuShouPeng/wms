@@ -30,7 +30,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { inventoryData } from '../../../mockdata';
+import { inventoryData } from '../../../mockdata/reportsData';
 
 export function InventoryReportsPage() {
   const navigate = useNavigate();

@@ -45,9 +45,10 @@ import {
   Upload
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockSuppliers, supplierCooperationAnalysis } from '../../../mockdata';
+import { mockSuppliers, supplierCooperationAnalysis } from '../../../mockdata/basicData';
+import { materialCategories } from '../../../mockdata/materials';
 
-export function SuppliersPage() {
+const SuppliersPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -107,10 +108,9 @@ export function SuppliersPage() {
             <SelectValue placeholder="选择主营类别" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="hardware">五金件</SelectItem>
-            <SelectItem value="electronic">电子元件</SelectItem>
-            <SelectItem value="cable">电缆线材</SelectItem>
-            <SelectItem value="mechanical">机械零件</SelectItem>
+            {materialCategories.map((category) => (
+              <SelectItem key={category} value={category}>{category}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -232,10 +232,9 @@ export function SuppliersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">全部分类</SelectItem>
-                  <SelectItem value="五金件">五金件</SelectItem>
-                  <SelectItem value="电子元件">电子元件</SelectItem>
-                  <SelectItem value="电缆线材">电缆线材</SelectItem>
-                  <SelectItem value="机械零件">机械零件</SelectItem>
+                  {materialCategories.map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
@@ -297,7 +296,7 @@ export function SuppliersPage() {
                       <TableCell>{supplier.email}</TableCell>
                       <TableCell>{supplier.category}</TableCell>
                       <TableCell>
-                        <Badge variant={statusInfo.variant as any}>
+                        <Badge variant={statusInfo.variant}>
                           {statusInfo.label}
                         </Badge>
                       </TableCell>
@@ -344,7 +343,7 @@ export function SuppliersPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {['五金件', '电子元件', '电缆线材', '机械零件'].map((category) => {
+              {materialCategories.map((category) => {
                 const count = mockSuppliers.filter(s => s.category === category).length;
                 const percentage = totalSuppliers > 0 ? Math.round((count / totalSuppliers) * 100) : 0;
                 return (
@@ -404,4 +403,6 @@ export function SuppliersPage() {
       </div>
     </div>
   );
-}
+};
+
+export default SuppliersPage;

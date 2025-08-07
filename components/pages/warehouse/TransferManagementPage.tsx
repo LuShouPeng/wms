@@ -37,7 +37,7 @@ import {
   Eye,
   Truck
 } from 'lucide-react';
-import { mockProducts, transferOrders, warehouses } from '../../../mockdata';
+import { mockProducts, transferOrders, warehouseOptions as warehouses } from '../../../mockdata/warehouse';
 
 export function TransferManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');

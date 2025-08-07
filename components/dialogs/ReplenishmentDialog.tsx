@@ -29,7 +29,7 @@ import {
   Phone
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { suggestedSuppliers } from '../../mockdata';
+import { suggestedSuppliers } from '../../mockdata/replenishmentData';
 
 interface ReplenishmentDialogProps {
   open: boolean;

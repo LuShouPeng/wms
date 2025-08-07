@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { mockProducts } from '../../../mockdata';
+import { mockProducts } from '../../../mockdata/warehouse';
 
 interface StandaloneInventoryFormProps {
   warehouseId?: string;

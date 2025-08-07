@@ -38,7 +38,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getStatusBadge } from '../../../lib/utils';
-import { salesOrders } from '../../../mockdata';
+import { salesOrders } from '../../../mockdata/businessData';
+import { customers } from '../../../mockdata/business';
 
 export function SalesManagementPage() {
   const navigate = useNavigate();
@@ -71,10 +72,10 @@ export function SalesManagementPage() {
             id="customer"
             className="w-full px-3 py-2 border border-input rounded-md bg-background"
           >
-            <option>选择客户</option>
-            <option>客户A</option>
-            <option>客户B</option>
-            <option>客户C</option>
+            <option value="">选择客户</option>
+            {customers.map((customer) => (
+              <option key={customer.id} value={customer.id}>{customer.name}</option>
+            ))}
           </select>
         </div>
         <div className="space-y-2">

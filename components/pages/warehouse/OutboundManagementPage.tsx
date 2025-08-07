@@ -37,7 +37,7 @@ import {
   Eye,
   PackageX
 } from 'lucide-react';
-import { mockProducts, outboundOrders, departments, warehouses } from '../../../mockdata';
+import { mockProducts, outboundOrders, warehouseDepartments as departments, warehouseOptions as warehouses } from '../../../mockdata/warehouse';
 
 export function OutboundManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');

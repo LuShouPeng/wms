@@ -32,12 +32,18 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockUsers, mockRoles, mockWorkflows } from '../../../mockdata';
+import { mockUsers, mockRoles, mockWorkflows, systemStats } from '../../../mockdata/systemData';
 import { UserForm } from '../../forms/UserForm';
 import { RoleForm } from '../../forms/RoleForm';
 import { WorkflowForm } from '../../forms/WorkflowForm';
 
-export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
+interface SystemSettingsProps {
+  user?: any;
+  activeSubModule?: string;
+  onSubModuleChange?: (module: string) => void;
+}
+
+export function SystemSettings({ user, activeSubModule, onSubModuleChange }: SystemSettingsProps) {
   const [activeTab, setActiveTab] = useState(activeSubModule || 'users');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -75,9 +81,9 @@ export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
+            <div className="text-2xl font-bold">{systemStats.activeUsers}</div>
             <p className="text-xs text-muted-foreground">
-              共 28 个用户
+              共 {systemStats.totalUsers} 个用户
             </p>
           </CardContent>
         </Card>
@@ -88,9 +94,9 @@ export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
+            <div className="text-2xl font-bold">{systemStats.totalRoles}</div>
             <p className="text-xs text-muted-foreground">
-              权限分配完善
+              {systemStats.activeRoles} 个活跃角色
             </p>
           </CardContent>
         </Card>
@@ -101,9 +107,9 @@ export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
             <GitBranch className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">{systemStats.totalWorkflows}</div>
             <p className="text-xs text-muted-foreground">
-              运行正常
+              {systemStats.activeWorkflows} 个运行中
             </p>
           </CardContent>
         </Card>
@@ -114,7 +120,7 @@ export function SystemSettings({ user, activeSubModule, onSubModuleChange }) {
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
+            <div className="text-2xl font-bold">{systemStats.systemAlerts}</div>
             <p className="text-xs text-muted-foreground">
               需要关注
             </p>

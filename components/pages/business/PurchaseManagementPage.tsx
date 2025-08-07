@@ -37,7 +37,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getStatusBadge } from '../../../lib/utils';
-import { purchaseOrders } from '../../../mockdata';
+import { purchaseOrders } from '../../../mockdata/businessData';
+import { suppliers } from '../../../mockdata/business';
 
 export function PurchaseManagementPage() {
   const navigate = useNavigate();
@@ -69,10 +70,10 @@ export function PurchaseManagementPage() {
             id="supplier"
             className="w-full px-3 py-2 border border-input rounded-md bg-background"
           >
-            <option>选择供应商</option>
-            <option>供应商A</option>
-            <option>供应商B</option>
-            <option>供应商C</option>
+            <option value="">选择供应商</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+            ))}
           </select>
         </div>
         <div className="space-y-2">

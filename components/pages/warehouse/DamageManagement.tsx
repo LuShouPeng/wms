@@ -65,32 +65,57 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockDamageRecords, mockProducts, damageTypes } from '../../../mockdata';
+import { damageRecords as mockDamageRecords, mockProducts, damageCategoryTypes as damageTypes, damageStatusOptions } from '../../../mockdata';
+
+// Define the type for a single damage record
+interface DamageRecord {
+  id: string;
+  productName: string;
+  productCode: string;
+  quantity: number;
+  damageType: string;
+  reason: string;
+  damageTime: string;
+  operator: string;
+  status: 'approved' | 'pending' | 'rejected';
+  attachments: string[];
+  reviewComment: string | null;
+  reviewer: string | null;
+  reviewTime: string | null;
+}
 
 export function DamageManagement() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showDetails, setShowDetails] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState<DamageRecord | null>(null);
   const [showNewForm, setShowNewForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editingRecord, setEditingRecord] = useState(null);
+  const [editingRecord, setEditingRecord] = useState<DamageRecord | null>(null);
 
   const itemsPerPage = 10;
 
-  const getDamageTypeColor = (type) => {
-    const colorMap = {
-      '损坏报损': 'bg-red-100 text-red-800',
-      '丢失报损': 'bg-yellow-100 text-yellow-800',
-      '其他报损': 'bg-gray-100 text-gray-800'
-    };
-    return colorMap[type] || 'bg-gray-100 text-gray-800';
+  interface DamageType {
+    value: string;
+    label: string;
+    description: string;
+    className: string;
+  }
+
+  interface DamageStatusOption {
+    value: string;
+    label: string;
+  }
+
+  const getDamageTypeClassName = (typeValue: string) => {
+    const damageType = damageTypes.find((t: DamageType) => t.value === typeValue);
+    return damageType ? damageType.className : 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: 'approved' | 'pending' | 'rejected') => {
     switch (status) {
       case 'approved':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -103,7 +128,7 @@ export function DamageManagement() {
     }
   };
 
-  const filteredRecords = mockDamageRecords.filter(record => {
+  const filteredRecords: DamageRecord[] = mockDamageRecords.filter(record => {
     const matchesSearch = record.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          record.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          record.operator.toLowerCase().includes(searchTerm.toLowerCase());
@@ -117,7 +142,7 @@ export function DamageManagement() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedRecords = filteredRecords.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleSelectRow = (recordId) => {
+  const handleSelectRow = (recordId: string) => {
     setSelectedRows(prev => 
       prev.includes(recordId) 
         ? prev.filter(id => id !== recordId)
@@ -133,22 +158,22 @@ export function DamageManagement() {
     }
   };
 
-  const handleViewDetails = (record) => {
+  const handleViewDetails = (record: DamageRecord) => {
     setSelectedRecord(record);
     setShowDetails(true);
   };
 
-  const handleEdit = (record) => {
+  const handleEdit = (record: DamageRecord) => {
     setEditingRecord(record);
     setShowEditForm(true);
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setSelectedRows([]); // 清空选择
   };
 
-  const DamageForm = ({ editRecord = null, onClose }) => {
+  const DamageForm = ({ editRecord = null, onClose }: { editRecord?: DamageRecord | null, onClose: () => void }) => {
     const [formData, setFormData] = useState({
       productCode: editRecord?.productCode || '',
       quantity: editRecord?.quantity || '',
@@ -156,7 +181,7 @@ export function DamageManagement() {
       reason: editRecord?.reason || ''
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       // 这里处理表单提交逻辑
       console.log('提交表单数据:', formData);
@@ -210,7 +235,7 @@ export function DamageManagement() {
               <SelectValue placeholder="选择报损类型" />
             </SelectTrigger>
             <SelectContent>
-              {damageTypes.map(type => (
+              {damageTypes.map((type: DamageType) => (
                 <SelectItem key={type.value} value={type.value}>
                   <div>
                     <div className="font-medium">{type.label}</div>
@@ -263,11 +288,11 @@ export function DamageManagement() {
     );
   };
 
-  const ReviewDialog = ({ record, onClose }) => {
+  const ReviewDialog = ({ record, onClose }: { record: DamageRecord, onClose: () => void }) => {
     const [reviewComment, setReviewComment] = useState('');
     const [reviewResult, setReviewResult] = useState('');
 
-    const handleReview = (result) => {
+    const handleReview = (result: string) => {
       setReviewResult(result);
       // 这里处理审核逻辑
       console.log(`审核结果: ${result}, 意见: ${reviewComment}`);
@@ -294,7 +319,7 @@ export function DamageManagement() {
           </div>
           <div>
             <Label>报损类型</Label>
-            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getDamageTypeColor(record.damageType)}`}>
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getDamageTypeClassName(record.damageType)}`}>
               {record.damageType}
             </span>
           </div>
@@ -337,7 +362,7 @@ export function DamageManagement() {
     );
   };
 
-  const DetailsDialog = ({ record }) => (
+  const DetailsDialog = ({ record }: { record: DamageRecord }) => (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div>
@@ -358,7 +383,7 @@ export function DamageManagement() {
         </div>
         <div>
           <Label>报损类型</Label>
-          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${getDamageTypeColor(record.damageType)}`}>
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${getDamageTypeClassName(record.damageType)}`}>
             {record.damageType}
           </span>
         </div>
@@ -384,7 +409,7 @@ export function DamageManagement() {
         <div>
           <Label>附件</Label>
           <div className="flex gap-2 mt-2 flex-wrap">
-            {record.attachments.map((file, index) => (
+            {record.attachments.map((file: string, index: number) => (
               <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md">
                 <FileImage className="h-4 w-4 text-gray-500" />
                 <span className="text-sm">{file}</span>
@@ -438,7 +463,7 @@ export function DamageManagement() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">全部类型</SelectItem>
-              {damageTypes.map(type => (
+              {damageTypes.map((type: DamageType) => (
                 <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
               ))}
             </SelectContent>
@@ -449,10 +474,11 @@ export function DamageManagement() {
               <SelectValue placeholder="状态" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">全部状态</SelectItem>
-              <SelectItem value="pending">待审核</SelectItem>
-              <SelectItem value="approved">审核成功</SelectItem>
-              <SelectItem value="rejected">审核失败</SelectItem>
+              {damageStatusOptions.map((option: DamageStatusOption) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
@@ -574,7 +600,7 @@ export function DamageManagement() {
                   </TableCell>
                   <TableCell className="font-medium">{record.id}</TableCell>
                   <TableCell>
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getDamageTypeColor(record.damageType)}`}>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getDamageTypeClassName(record.damageType)}`}>
                       {record.damageType}
                     </span>
                   </TableCell>
@@ -650,7 +676,9 @@ export function DamageManagement() {
                                   请仔细审核报损信息并填写审核意见
                                 </DialogDescription>
                               </DialogHeader>
-                              <ReviewDialog record={record} onClose={() => {}} />
+                              <ReviewDialog record={record} onClose={() => {
+                                // Close dialog logic if needed
+                              }} />
                             </DialogContent>
                           </Dialog>
                         </>

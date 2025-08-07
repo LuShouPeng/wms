@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { basicDataHomeStats } from '../../../mockdata';
+import { basicDataHomeStats } from '../../../mockdata/basicDataPageData';
 
 export function BasicDataHomePage() {
 

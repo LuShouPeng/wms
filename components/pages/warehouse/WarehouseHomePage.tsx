@@ -9,6 +9,7 @@ import {
   ClipboardList,
   AlertTriangle
 } from 'lucide-react';
+import { warehouseStats } from '../../../mockdata/warehouse';
 
 export function WarehouseHomePage() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export function WarehouseHomePage() {
             <PackageCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
+            <div className="text-2xl font-bold">{warehouseStats.todayInbound}</div>
             <p className="text-xs text-muted-foreground">
               +3 从昨日
             </p>
@@ -49,7 +50,7 @@ export function WarehouseHomePage() {
             <PackageX className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">18</div>
+            <div className="text-2xl font-bold">{warehouseStats.todayOutbound}</div>
             <p className="text-xs text-muted-foreground">
               -2 从昨日
             </p>
@@ -62,7 +63,7 @@ export function WarehouseHomePage() {
             <Truck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
+            <div className="text-2xl font-bold">{warehouseStats.transferOperations}</div>
             <p className="text-xs text-muted-foreground">
               +1 从昨日
             </p>
@@ -75,7 +76,7 @@ export function WarehouseHomePage() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
+            <div className="text-2xl font-bold">{warehouseStats.damageRecords}</div>
             <p className="text-xs text-muted-foreground">
               本月新增
             </p>
@@ -88,7 +89,7 @@ export function WarehouseHomePage() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold">{warehouseStats.alerts}</div>
             <p className="text-xs text-muted-foreground">
               需要处理
             </p>

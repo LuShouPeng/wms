@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getStatusBadge } from '../../../lib/utils';
-import { mockRoles } from '../../../mockdata';
+import { mockRoles } from '../../../mockdata/systemData';
 import { RoleForm } from '../../forms/RoleForm';
 
 export function RolesPage() {

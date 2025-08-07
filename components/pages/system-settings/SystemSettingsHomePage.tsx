@@ -12,6 +12,7 @@ import {
   UserCheck,
   Workflow
 } from 'lucide-react';
+import { systemStats } from '../../../mockdata/systemData';
 
 export function SystemSettingsHomePage() {
   const navigate = useNavigate();
@@ -40,9 +41,9 @@ export function SystemSettingsHomePage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
+            <div className="text-2xl font-bold">{systemStats.activeUsers}</div>
             <p className="text-xs text-muted-foreground">
-              共 28 个用户
+              共 {systemStats.totalUsers} 个用户
             </p>
           </CardContent>
         </Card>
@@ -53,7 +54,7 @@ export function SystemSettingsHomePage() {
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
+            <div className="text-2xl font-bold">{systemStats.totalRoles}</div>
             <p className="text-xs text-muted-foreground">
               权限分配完善
             </p>
@@ -66,7 +67,7 @@ export function SystemSettingsHomePage() {
             <GitBranch className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">{systemStats.activeWorkflows}</div>
             <p className="text-xs text-muted-foreground">
               运行正常
             </p>
@@ -79,7 +80,7 @@ export function SystemSettingsHomePage() {
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
+            <div className="text-2xl font-bold">{systemStats.alerts}</div>
             <p className="text-xs text-muted-foreground">
               需要关注
             </p>
@@ -104,15 +105,15 @@ export function SystemSettingsHomePage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">总用户数</span>
-                <span className="font-medium">28</span>
+                <span className="font-medium">{systemStats.totalUsers}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">活跃用户</span>
-                <span className="font-medium text-green-600">23</span>
+                <span className="font-medium text-green-600">{systemStats.activeUsers}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">今日登录</span>
-                <span className="font-medium">15</span>
+                <span className="font-medium">{systemStats.todayLogins}</span>
               </div>
             </div>
             <Button 
@@ -144,15 +145,15 @@ export function SystemSettingsHomePage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">角色总数</span>
-                <span className="font-medium">8</span>
+                <span className="font-medium">{systemStats.totalRoles}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">自定义角色</span>
-                <span className="font-medium text-blue-600">5</span>
+                <span className="font-medium text-blue-600">{systemStats.customRoles}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">权限模块</span>
-                <span className="font-medium">6</span>
+                <span className="font-medium">{systemStats.permissionModules}</span>
               </div>
             </div>
             <Button 
@@ -184,15 +185,15 @@ export function SystemSettingsHomePage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">流程总数</span>
-                <span className="font-medium">12</span>
+                <span className="font-medium">{systemStats.totalWorkflows}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">运行中</span>
-                <span className="font-medium text-green-600">10</span>
+                <span className="font-medium text-green-600">{systemStats.activeWorkflows}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">待审批</span>
-                <span className="font-medium text-orange-600">8</span>
+                <span className="font-medium text-orange-600">{systemStats.pendingApprovals}</span>
               </div>
             </div>
             <Button 

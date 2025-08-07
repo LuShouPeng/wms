@@ -46,7 +46,7 @@ import {
   Warehouse
 } from 'lucide-react';
 import { cn } from '../../../lib/utils';
-import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../../../mockdata';
+import { editPageDepartments, warehouseTypes, editPageSuppliers, mockWarehouseFormData } from '../../../mockdata/warehouse';
 
 interface WarehouseEditPageProps {
   warehouseId?: string;

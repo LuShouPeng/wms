@@ -25,7 +25,7 @@ import { BasicData } from './components/pages/basic-data/BasicData';
 import { BasicDataHomePage } from './components/pages/basic-data/BasicDataHomePage';
 import { WarehousesPage } from './components/pages/basic-data/WarehousesPage';
 import { MaterialsPage } from './components/pages/basic-data/MaterialsPage';
-import { SuppliersPage } from './components/pages/basic-data/SuppliersPage';
+import SuppliersPage from './components/pages/basic-data/SuppliersPage';
 import { SystemSettings } from './components/pages/system-settings/SystemSettings';
 import { SystemSettingsHomePage } from './components/pages/system-settings/SystemSettingsHomePage';
 import { UsersPage } from './components/pages/system-settings/UsersPage';
@@ -166,7 +166,7 @@ export default function App() {
             <Route path="inventory" element={<InventoryManagementPage />} />
             <Route path="damage" element={<DamageManagement />} />
           </Route>
-          <Route path="warehouse-edit/:id" element={<WarehouseEditPage />} />
+          <Route path="warehouse-edit/:id" element={<WarehouseEditPage onBack={() => window.history.back()} />} />
           <Route path="inventory/:id" element={<InventoryPage />} />
           
           {/* 业务管理路由 */}

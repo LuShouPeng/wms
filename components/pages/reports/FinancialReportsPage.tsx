@@ -31,7 +31,7 @@ import {
   PieChart as PieChartIcon
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { financialData, categoryData } from '../../../mockdata';
+import { financialData, categoryData, quarterlyData } from '../../../mockdata/reportsData';
 
 export function FinancialReportsPage() {
   const navigate = useNavigate();
@@ -61,13 +61,6 @@ export function FinancialReportsPage() {
     return 'text-gray-600';
   };
 
-  // 季度统计
-  const quarterlyData = [
-    { quarter: 'Q1', purchase: 145000, sales: 135000, profit: -10000 },
-    { quarter: 'Q2', purchase: 175000, sales: 185000, profit: 10000 },
-    { quarter: 'Q3', purchase: 160000, sales: 170000, profit: 10000 },
-    { quarter: 'Q4', purchase: 180000, sales: 195000, profit: 15000 }
-  ];
 
   return (
     <div className="space-y-6">

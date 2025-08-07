@@ -34,6 +34,15 @@ export const mockWarehouses = [
   }
 ];
 
+// 供应商合作分析数据
+export const supplierCooperationAnalysis = {
+  cooperationRate: '95%',
+  averageCooperationDuration: '3.5年',
+  qualityScore: '4.8/5',
+  onTimeDeliveryRate: '98%',
+  newSuppliers: '5家 (本月)'
+};
+
 // 物料数据
 export const mockMaterials = [
   {

@@ -9,6 +9,7 @@ import {
   productCategoryOption,
   inboundOutboundOption
 } from '../mockdata';
+import { realTimeData, timeRangeOptions } from '../mockdata/dashboard';
 
 const EchartsDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,30 +43,17 @@ const EchartsDashboard = () => {
         </div>
         <div className="flex flex-wrap gap-2">
           <div className="flex bg-muted rounded-lg p-1">
-            <Button
-              variant={timeRange === '7d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('7d')}
-            >
-              7天
-            </Button>
-            <Button
-              variant={timeRange === '30d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('30d')}
-            >
-              30天
-            </Button>
-            <Button
-              variant={timeRange === '90d' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8"
-              onClick={() => handleTimeRangeChange('90d')}
-            >
-              90天
-            </Button>
+            {timeRangeOptions.map(option => (
+              <Button
+                key={option.value}
+                variant={timeRange === option.value ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8"
+                onClick={() => handleTimeRangeChange(option.value)}
+              >
+                {option.label}
+              </Button>
+            ))}
           </div>
           <Button 
             variant="outline" 
@@ -150,26 +138,13 @@ const EchartsDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-              <div className="text-sm text-purple-600 font-medium">总库存</div>
-              <div className="text-2xl font-bold text-purple-900">1,256</div>
-              <div className="text-xs text-purple-500">+12% 同比增长</div>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-              <div className="text-sm text-green-600 font-medium">可用库存</div>
-              <div className="text-2xl font-bold text-green-900">892</div>
-              <div className="text-xs text-green-500">+8% 同比增长</div>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg">
-              <div className="text-sm text-yellow-600 font-medium">预警库存</div>
-              <div className="text-2xl font-bold text-yellow-900">23</div>
-              <div className="text-xs text-yellow-500">-5% 同比下降</div>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-              <div className="text-sm text-blue-600 font-medium">周转率</div>
-              <div className="text-2xl font-bold text-blue-900">85%</div>
-              <div className="text-xs text-blue-500">健康水平</div>
-            </div>
+            {realTimeData.map((item, index) => (
+              <div key={index} className={`p-4 bg-gradient-to-br ${item.style.bg} rounded-lg`}>
+                <div className={`text-sm ${item.style.text} font-medium`}>{item.label}</div>
+                <div className={`text-2xl font-bold ${item.style.value}`}>{item.value}</div>
+                <div className={`text-xs ${item.style.change}`}>{item.change}</div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

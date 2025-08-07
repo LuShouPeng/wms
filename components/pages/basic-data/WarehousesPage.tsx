@@ -44,7 +44,7 @@ import {
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
 import { WarehouseEditPage } from '../warehouse/WarehouseEditPage';
-import { mockWarehouses } from '../../../mockdata';
+import { mockWarehouses, warehouseStatusOptions, warehouseFormPlaceholders } from '../../../mockdata/warehouse';
 
 export function WarehousesPage() {
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ export function WarehousesPage() {
   if (showEditPage) {
     return (
       <WarehouseEditPage
-        warehouseId={editingWarehouseId}
+        warehouseId={editingWarehouseId ?? undefined}
         onBack={handleBackToList}
         onSave={handleSaveWarehouse}
       />
@@ -92,9 +92,10 @@ export function WarehousesPage() {
 
   // 筛选数据
   const filteredWarehouses = mockWarehouses.filter(warehouse => {
-    const matchesSearch = warehouse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         warehouse.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         warehouse.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = (warehouse.name?.toLowerCase().includes(searchLower) || false) ||
+                         (warehouse.id?.toLowerCase().includes(searchLower) || false) ||
+                         (warehouse.location?.toLowerCase().includes(searchLower) || false);
     const matchesStatus = selectedStatus === 'all' || warehouse.status === selectedStatus;
     
     return matchesSearch && matchesStatus;
@@ -111,30 +112,30 @@ export function WarehousesPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="warehouseId">仓库编号</Label>
-          <Input id="warehouseId" placeholder="如：WH004" />
+          <Input id="warehouseId" placeholder={warehouseFormPlaceholders.id} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="warehouseName">仓库名称</Label>
-          <Input id="warehouseName" placeholder="输入仓库名称" />
+          <Input id="warehouseName" placeholder={warehouseFormPlaceholders.name} />
         </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="location">仓库地址</Label>
-        <Input id="location" placeholder="详细地址" />
+        <Input id="location" placeholder={warehouseFormPlaceholders.location} />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="manager">管理员</Label>
-          <Input id="manager" placeholder="管理员姓名" />
+          <Input id="manager" placeholder={warehouseFormPlaceholders.manager} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="phone">联系电话</Label>
-          <Input id="phone" placeholder="联系电话" />
+          <Input id="phone" placeholder={warehouseFormPlaceholders.phone} />
         </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="capacity">仓库容量</Label>
-        <Input id="capacity" placeholder="容量（立方米）" />
+        <Input id="capacity" placeholder={warehouseFormPlaceholders.capacity} />
       </div>
       <div className="flex justify-end gap-2">
         <Button variant="outline">取消</Button>
@@ -253,10 +254,11 @@ export function WarehousesPage() {
                   <SelectValue placeholder="状态筛选" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">全部状态</SelectItem>
-                  <SelectItem value="active">运行中</SelectItem>
-                  <SelectItem value="maintenance">维护中</SelectItem>
-                  <SelectItem value="inactive">停用</SelectItem>
+                  {warehouseStatusOptions.map(option => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

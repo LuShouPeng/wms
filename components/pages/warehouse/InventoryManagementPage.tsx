@@ -37,7 +37,7 @@ import {
   Eye,
   ClipboardList
 } from 'lucide-react';
-import { mockProducts, inventoryOrders, warehouses } from '../../../mockdata';
+import { mockProducts, inventoryOrders, warehouseOptions as warehouses } from '../../../mockdata/warehouse';
 
 export function InventoryManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');

@@ -52,9 +52,13 @@ import {
   categoryData,
   financialData,
   alertData
-} from '../../../mockdata';
+} from '../../../mockdata/reportsData';
+import { reportStats } from '../../../mockdata/reports';
 
-export function Reports({ user }) {
+type StockStatus = 'low' | 'normal' | 'high';
+type AlertLevel = 'high' | 'medium' | 'low';
+
+export function Reports({ user }: { user: any }) {
   const [activeTab, setActiveTab] = useState('inventory');
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [replenishmentDialog, setReplenishmentDialog] = useState({
@@ -66,22 +70,22 @@ export function Reports({ user }) {
   });
 
 
-  const getStockStatusBadge = (status) => {
+  const getStockStatusBadge = (status: StockStatus) => {
     const statusMap = {
-      low: { label: '库存不足', variant: 'destructive' },
-      normal: { label: '正常', variant: 'success' },
-      high: { label: '库存充足', variant: 'info' }
+      low: { label: '库存不足', variant: 'destructive' as const },
+      normal: { label: '正常', variant: 'default' as const },
+      high: { label: '库存充足', variant: 'secondary' as const }
     };
-    return statusMap[status] || { label: status, variant: 'default' };
+    return statusMap[status] || { label: status, variant: 'default' as const };
   };
 
-  const getAlertLevelBadge = (level) => {
+  const getAlertLevelBadge = (level: AlertLevel) => {
     const levelMap = {
-      high: { label: '高风险', variant: 'destructive' },
-      medium: { label: '中风险', variant: 'warning' },
-      low: { label: '低风险', variant: 'success' }
+      high: { label: '高风险', variant: 'destructive' as const },
+      medium: { label: '中风险', variant: 'secondary' as const },
+      low: { label: '低风险', variant: 'default' as const }
     };
-    return levelMap[level] || { label: level, variant: 'default' };
+    return levelMap[level] || { label: level, variant: 'default' as const };
   };
 
   const handleReplenishmentRequest = (alert: any) => {
@@ -124,57 +128,20 @@ export function Reports({ user }) {
 
       {/* 概览统计 */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">库存总价值</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">¥2,456,789</div>
-            <p className="text-xs text-muted-foreground">
-              +12.5% 较上月
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">本月采购</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">¥320,000</div>
-            <p className="text-xs text-muted-foreground">
-              +8.2% 较上月
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">库存周转率</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2.4</div>
-            <p className="text-xs text-muted-foreground">
-              较上月持平
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">预警物料</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              需要补货
-            </p>
-          </CardContent>
-        </Card>
+        {reportStats.map((stat, index) => (
+          <Card key={index}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+              <stat.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* 报表主要内容 */}

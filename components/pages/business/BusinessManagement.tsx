@@ -39,17 +39,56 @@ import {
 } from 'lucide-react';
 // ✅ FIX 1: Integrate utility functions from lib/utils.ts
 import { getStatusBadge } from '../../../lib/utils';
-// ✅ FIX 2: Integrate form components from forms/ folder
 import { WorkflowForm } from '../../forms/WorkflowForm';
-import { UserForm } from './forms/UserForm';
-import { RoleForm } from './forms/RoleForm';
-// ✅ FIX 3: Integrate mock data from constants
-import { mockUsers, mockWorkflows, purchaseOrders, salesOrders } from '../../../mockdata';
-// ✅ FIX 8: Add cross-component integration
+import { businessStats, suppliers, customers } from '../../../mockdata/business';
+import { purchaseOrders, salesOrders } from '../../../mockdata/businessData';
+import { mockWorkflows } from '../../../mockdata/systemData';
+import { PurchaseForm } from '../../forms/PurchaseForm';
+import { SalesForm } from '../../forms/SalesForm';
 import { DamageManagement } from '../warehouse/DamageManagement';
 import { WarehouseManagement } from '../warehouse/WarehouseManagement';
 
-// ✅ FIX 5: Add TypeScript interface for props
+interface PurchaseOrder {
+  id: string;
+  date: string;
+  supplier: string;
+  amount: string;
+  status: string;
+  items: number;
+  operator: string;
+  approver: string;
+}
+
+interface SalesOrder {
+  id: string;
+  date: string;
+  customer: string;
+  amount: string;
+  status: string;
+  items: number;
+  operator: string;
+  salesperson: string;
+}
+
+interface Workflow {
+  id: string;
+  name: string;
+  type: string;
+  steps: number;
+  condition: string;
+  status: string;
+}
+
+interface Supplier {
+  id: string;
+  name: string;
+}
+
+interface Customer {
+  id: string;
+  name: string;
+}
+
 interface BusinessManagementProps {
   user?: any;
   activeSubModule?: string;
@@ -106,77 +145,6 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
     }
   };
 
-  // ✅ FIX 6: Improved PurchaseForm with proper Label components and better structure
-  const PurchaseForm = () => (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="supplier">供应商</Label>
-          <select
-            id="supplier"
-            className="w-full px-3 py-2 border border-input rounded-md bg-background"
-          >
-            <option>选择供应商</option>
-            <option>供应商A</option>
-            <option>供应商B</option>
-            <option>供应商C</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="amount">预计金额</Label>
-          <Input id="amount" placeholder="输入预计金额" />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="reason">采购原因</Label>
-        <textarea
-          id="reason"
-          className="w-full px-3 py-2 border border-input rounded-md h-20 resize-none bg-background"
-          placeholder="请描述采购原因..."
-        />
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button variant="outline">保存草稿</Button>
-        <Button>提交审批</Button>
-      </div>
-    </div>
-  );
-
-  // ✅ FIX 7: Improved SalesForm with proper Label components and better structure
-  const SalesForm = () => (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="customer">客户</Label>
-          <select
-            id="customer"
-            className="w-full px-3 py-2 border border-input rounded-md bg-background"
-          >
-            <option>选择客户</option>
-            <option>客户A</option>
-            <option>客户B</option>
-            <option>客户C</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="salesAmount">销售金额</Label>
-          <Input id="salesAmount" placeholder="输入销售金额" />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="notes">备注</Label>
-        <textarea
-          id="notes"
-          className="w-full px-3 py-2 border border-input rounded-md h-20 resize-none bg-background"
-          placeholder="销售备注信息..."
-        />
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button variant="outline">取消</Button>
-        <Button>确认销售</Button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="space-y-6">
@@ -191,57 +159,20 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
 
       {/* 统计概览 */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">本月采购</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">¥105,630</div>
-            <p className="text-xs text-muted-foreground">
-              +12.5% 较上月
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">本月销售</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">¥76,330</div>
-            <p className="text-xs text-muted-foreground">
-              +8.2% 较上月
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待审批</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">
-              采购单待处理
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">已完成</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">25</div>
-            <p className="text-xs text-muted-foreground">
-              本月订单
-            </p>
-          </CardContent>
-        </Card>
+        {businessStats.map((stat) => (
+          <Card key={stat.title}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+              <stat.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* 业务管理主要功能 */}
@@ -313,7 +244,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                           创建新的采购申请，提交后将进入审批流程
                         </DialogDescription>
                       </DialogHeader>
-                      <PurchaseForm />
+                      <PurchaseForm suppliers={suppliers as Supplier[]} />
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -335,7 +266,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {purchaseOrders.map((order) => {
+                    {purchaseOrders.map((order: PurchaseOrder) => {
                       const statusInfo = getStatusBadge(order.status);
                       const statusIcon = getStatusIcon(order.status);
                       return (
@@ -412,7 +343,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                           创建新的销售订单，记录销售信息
                         </DialogDescription>
                       </DialogHeader>
-                      <SalesForm />
+                      <SalesForm customers={customers as Customer[]} />
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -434,7 +365,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {salesOrders.map((order) => {
+                    {salesOrders.map((order: SalesOrder) => {
                       const statusInfo = getStatusBadge(order.status);
                       const statusIcon = getStatusIcon(order.status);
                       return (
@@ -510,7 +441,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {mockWorkflows.map((workflow) => (
+                      {mockWorkflows.map((workflow: Workflow) => (
                         <div key={workflow.id} className="flex items-center justify-between p-3 border rounded-lg">
                           <div>
                             <h4 className="font-medium">{workflow.name}</h4>

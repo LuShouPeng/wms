@@ -6,8 +6,8 @@ import { Label } from '../../ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { AlertTriangle, Shield, User, Lock, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription } from '../../ui/alert';
-import { mockLoginUsers } from '../../../mockdata';
-import { User as UserType } from '../lib/types';
+import { mockLoginUsers } from '../../../mockdata/loginData';
+import { User as UserType } from '../lib/types.ts';
 
 interface LoginProps {
   onLogin?: (user: UserType) => void;

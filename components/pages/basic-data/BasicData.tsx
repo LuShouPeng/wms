@@ -46,7 +46,8 @@ import {
 } from 'lucide-react';
 import { getStatusBadge } from '../../../lib/utils';
 import { WarehouseEditPage } from '../warehouse/WarehouseEditPage';
-import { mockWarehouses, mockMaterials, mockSuppliers } from '../../../mockdata';
+import { mockWarehouses, mockMaterials, mockSuppliers } from '../../../mockdata/basicData';
+import { materialCategories, materialUnits } from '../../../mockdata/materials';
 
 interface BasicDataProps {
   user?: any;
@@ -62,7 +63,7 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
   const [activeTab, setActiveTab] = useState(subModule || activeSubModule || 'warehouses');
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditPage, setShowEditPage] = useState(false);
-  const [editingWarehouseId, setEditingWarehouseId] = useState<string | null>(null);
+  const [editingWarehouseId, setEditingWarehouseId] = useState<string | undefined>(undefined);
 
   // 当路由参数或activeSubModule改变时，更新activeTab
   useEffect(() => {
@@ -113,25 +114,25 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
 
 
   // 处理编辑仓库
-  const handleEditWarehouse = (warehouseId) => {
+  const handleEditWarehouse = (warehouseId: string) => {
     setEditingWarehouseId(warehouseId);
     setShowEditPage(true);
   };
 
   // 处理新增仓库
   const handleAddWarehouse = () => {
-    setEditingWarehouseId(null);
+    setEditingWarehouseId(undefined);
     setShowEditPage(true);
   };
 
   // 处理返回列表
   const handleBackToList = () => {
     setShowEditPage(false);
-    setEditingWarehouseId(null);
+    setEditingWarehouseId(undefined);
   };
 
   // 处理保存仓库
-  const handleSaveWarehouse = (data) => {
+  const handleSaveWarehouse = (data: any) => {
     console.log('保存仓库数据:', data);
     // 这里处理保存逻辑，然后返回列表
     setShowEditPage(false);
@@ -205,12 +206,11 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
             <SelectTrigger>
               <SelectValue placeholder="选择分类" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="hardware">五金件</SelectItem>
-              <SelectItem value="electronic">电子元件</SelectItem>
-              <SelectItem value="cable">电缆线材</SelectItem>
-              <SelectItem value="mechanical">机械零件</SelectItem>
-            </SelectContent>
+          <SelectContent>
+            {materialCategories.map((category) => (
+              <SelectItem key={category} value={category}>{category}</SelectItem>
+            ))}
+          </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
@@ -219,12 +219,11 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
             <SelectTrigger>
               <SelectValue placeholder="选择单位" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="piece">个</SelectItem>
-              <SelectItem value="meter">米</SelectItem>
-              <SelectItem value="kg">千克</SelectItem>
-              <SelectItem value="box">箱</SelectItem>
-            </SelectContent>
+          <SelectContent>
+            {materialUnits.map((unit) => (
+              <SelectItem key={unit.value} value={unit.value}>{unit.label}</SelectItem>
+            ))}
+          </SelectContent>
           </Select>
         </div>
       </div>
@@ -295,10 +294,9 @@ export function BasicData({ user, activeSubModule, onSubModuleChange }: BasicDat
             <SelectValue placeholder="选择主营类别" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="hardware">五金件</SelectItem>
-            <SelectItem value="electronic">电子元件</SelectItem>
-            <SelectItem value="cable">电缆线材</SelectItem>
-            <SelectItem value="mechanical">机械零件</SelectItem>
+            {materialCategories.map((category) => (
+              <SelectItem key={category} value={category}>{category}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
