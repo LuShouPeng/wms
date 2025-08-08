@@ -38,10 +38,9 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getStatusBadge } from '../../../lib/utils';
-import { salesOrders } from '../../../mockdata/businessData';
-import { customers } from '../../../mockdata/business';
+import { departments } from '../../../mockdata/business';
 
-export function SalesManagementPage() {
+export function DepartmentManagementPage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -63,64 +62,47 @@ export function SalesManagementPage() {
     }
   };
 
-  const SalesForm = () => (
+  const DepartmentForm = () => (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="customer">客户</Label>
-          <select
-            id="customer"
-            className="w-full px-3 py-2 border border-input rounded-md bg-background"
-          >
-            <option value="">选择客户</option>
-            {customers.map((customer) => (
-              <option key={customer.id} value={customer.id}>{customer.name}</option>
-            ))}
-          </select>
+          <Label htmlFor="departmentName">部门名称</Label>
+          <Input id="departmentName" placeholder="输入部门名称" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="salesAmount">销售金额</Label>
-          <Input id="salesAmount" placeholder="输入销售金额" />
+          <Label htmlFor="departmentCode">部门代码</Label>
+          <Input id="departmentCode" placeholder="输入部门代码" />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="deliveryDate">交货日期</Label>
-          <Input id="deliveryDate" type="date" />
+          <Label htmlFor="manager">部门负责人</Label>
+          <Input id="manager" placeholder="输入部门负责人" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="paymentMethod">付款方式</Label>
-          <select
-            id="paymentMethod"
-            className="w-full px-3 py-2 border border-input rounded-md bg-background"
-          >
-            <option>选择付款方式</option>
-            <option>现金</option>
-            <option>银行转账</option>
-            <option>支票</option>
-            <option>月结</option>
-          </select>
+          <Label htmlFor="employeeCount">员工数量</Label>
+          <Input id="employeeCount" type="number" placeholder="输入员工数量" />
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="notes">备注</Label>
+        <Label htmlFor="description">部门描述</Label>
         <textarea
-          id="notes"
+          id="description"
           className="w-full px-3 py-2 border border-input rounded-md h-20 resize-none bg-background"
-          placeholder="销售备注信息..."
+          placeholder="部门职责描述..."
         />
       </div>
       <div className="flex justify-end gap-2">
         <Button variant="outline">取消</Button>
-        <Button>确认销售</Button>
+        <Button>创建部门</Button>
       </div>
     </div>
   );
 
-  const filteredOrders = salesOrders.filter(order =>
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.operator.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDepartments = departments.filter(dept =>
+    dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    dept.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    dept.manager.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -132,9 +114,9 @@ export function SalesManagementPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">销售管理</h2>
+            <h2 className="text-2xl font-bold tracking-tight">部门管理</h2>
             <p className="text-muted-foreground">
-              管理销售订单、客户关系和销售流程
+              管理公司部门、员工配置和组织架构
             </p>
           </div>
         </div>
@@ -142,17 +124,17 @@ export function SalesManagementPage() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              新增销售单
+              新增部门
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>新增销售单</DialogTitle>
+              <DialogTitle>新增部门</DialogTitle>
               <DialogDescription>
-                创建新的销售订单，记录销售信息
+                创建新的部门，配置部门信息和负责人
               </DialogDescription>
             </DialogHeader>
-            <SalesForm />
+            <DepartmentForm />
           </DialogContent>
         </Dialog>
       </div>
@@ -161,55 +143,55 @@ export function SalesManagementPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">本月销售</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">部门总数</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">¥76,330</div>
-            <p className="text-xs text-muted-foreground">+8.2% 较上月</p>
+            <div className="text-2xl font-bold">8</div>
+            <p className="text-xs text-muted-foreground">个部门</p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待处理</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">销售单待处理</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">已完成</CardTitle>
+            <CardTitle className="text-sm font-medium">员工总数</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground">本月完成</p>
+            <div className="text-2xl font-bold">156</div>
+            <p className="text-xs text-muted-foreground">名员工</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">客户数</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">活跃部门</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">活跃客户</p>
+            <div className="text-2xl font-bold">7</div>
+            <p className="text-xs text-muted-foreground">个部门活跃</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">本月新增</CardTitle>
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">2</div>
+            <p className="text-xs text-muted-foreground">新部门</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* 销售订单列表 */}
+      {/* 部门列表 */}
       <Card>
         <CardHeader>
-          <CardTitle>销售订单列表</CardTitle>
+          <CardTitle>部门列表</CardTitle>
           <CardDescription>
-            查看和管理所有销售订单
+            查看和管理所有部门信息
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -219,7 +201,7 @@ export function SalesManagementPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="搜索销售单..."
+                  placeholder="搜索部门..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 w-80"
@@ -241,28 +223,26 @@ export function SalesManagementPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>销售单号</TableHead>
-                  <TableHead>销售日期</TableHead>
-                  <TableHead>客户</TableHead>
-                  <TableHead>金额</TableHead>
-                  <TableHead>物料数</TableHead>
+                  <TableHead>部门名称</TableHead>
+                  <TableHead>部门代码</TableHead>
+                  <TableHead>部门负责人</TableHead>
+                  <TableHead>员工数量</TableHead>
+                  <TableHead>创建时间</TableHead>
                   <TableHead>状态</TableHead>
-                  <TableHead>操作员</TableHead>
-                  <TableHead>销售员</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredOrders.map((order) => {
-                  const statusInfo = getStatusBadge(order.status);
-                  const statusIcon = getStatusIcon(order.status);
+                {filteredDepartments.map((dept) => {
+                  const statusInfo = getStatusBadge(dept.status);
+                  const statusIcon = getStatusIcon(dept.status);
                   return (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-medium">{order.id}</TableCell>
-                      <TableCell>{order.date}</TableCell>
-                      <TableCell>{order.customer}</TableCell>
-                      <TableCell>{order.amount}</TableCell>
-                      <TableCell>{order.items}</TableCell>
+                    <TableRow key={dept.id}>
+                      <TableCell className="font-medium">{dept.name}</TableCell>
+                      <TableCell>{dept.code}</TableCell>
+                      <TableCell>{dept.manager}</TableCell>
+                      <TableCell>{dept.employeeCount}</TableCell>
+                      <TableCell>{dept.createdAt}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {statusIcon}
@@ -271,8 +251,6 @@ export function SalesManagementPage() {
                           </Badge>
                         </div>
                       </TableCell>
-                      <TableCell>{order.operator}</TableCell>
-                      <TableCell>{order.salesperson}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
                           <Button variant="ghost" size="sm">

@@ -44,7 +44,7 @@ import { businessStats, suppliers, customers } from '../../../mockdata/business'
 import { purchaseOrders, salesOrders } from '../../../mockdata/businessData';
 import { mockWorkflows } from '../../../mockdata/systemData';
 import { PurchaseForm } from '../../forms/PurchaseForm';
-import { SalesForm } from '../../forms/SalesForm';
+import { DepartmentForm } from '../../forms/DepartmentForm';
 import { DamageManagement } from '../warehouse/DamageManagement';
 import { WarehouseManagement } from '../warehouse/WarehouseManagement';
 
@@ -107,7 +107,7 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
         'business-damage': 'damage',
         'workflow': 'workflow',
         'purchase': 'purchase',
-        'sales': 'sales'
+        'department': 'department'
       };
       
       const mappedModule = moduleMapping[activeSubModule] || activeSubModule;
@@ -190,9 +190,9 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                 <ShoppingCart className="h-4 w-4" />
                 采购管理
               </TabsTrigger>
-              <TabsTrigger value="sales" className="flex items-center gap-2">
+              <TabsTrigger value="department" className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
-                销售管理
+                部门管理
               </TabsTrigger>
               <TabsTrigger value="workflow" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
@@ -307,13 +307,13 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
               </div>
             </TabsContent>
 
-            <TabsContent value="sales" className="space-y-4">
+            <TabsContent value="department" className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                      placeholder="搜索销售单..."
+                      placeholder="搜索部门..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-9 w-80"
@@ -333,17 +333,17 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                     <DialogTrigger asChild>
                       <Button size="sm">
                         <Plus className="h-4 w-4 mr-2" />
-                        新增销售单
+                        新增部门
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl">
                       <DialogHeader>
-                        <DialogTitle>新增销售单</DialogTitle>
+                        <DialogTitle>新增部门</DialogTitle>
                         <DialogDescription>
-                          创建新的销售订单，记录销售信息
+                          创建新的部门，配置部门信息和负责人
                         </DialogDescription>
                       </DialogHeader>
-                      <SalesForm customers={customers as Customer[]} />
+                      <DepartmentForm />
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -353,28 +353,26 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>销售单号</TableHead>
-                      <TableHead>销售日期</TableHead>
-                      <TableHead>客户</TableHead>
-                      <TableHead>金额</TableHead>
-                      <TableHead>物料数</TableHead>
+                      <TableHead>部门名称</TableHead>
+                      <TableHead>部门代码</TableHead>
+                      <TableHead>部门负责人</TableHead>
+                      <TableHead>员工数量</TableHead>
+                      <TableHead>创建时间</TableHead>
                       <TableHead>状态</TableHead>
-                      <TableHead>操作员</TableHead>
-                      <TableHead>销售员</TableHead>
                       <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {salesOrders.map((order: SalesOrder) => {
-                      const statusInfo = getStatusBadge(order.status);
-                      const statusIcon = getStatusIcon(order.status);
+                    {departments.map((dept) => {
+                      const statusInfo = getStatusBadge(dept.status);
+                      const statusIcon = getStatusIcon(dept.status);
                       return (
-                        <TableRow key={order.id}>
-                          <TableCell className="font-medium">{order.id}</TableCell>
-                          <TableCell>{order.date}</TableCell>
-                          <TableCell>{order.customer}</TableCell>
-                          <TableCell>{order.amount}</TableCell>
-                          <TableCell>{order.items}</TableCell>
+                        <TableRow key={dept.id}>
+                          <TableCell className="font-medium">{dept.name}</TableCell>
+                          <TableCell>{dept.code}</TableCell>
+                          <TableCell>{dept.manager}</TableCell>
+                          <TableCell>{dept.employeeCount}</TableCell>
+                          <TableCell>{dept.createdAt}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
                               {statusIcon}
@@ -383,8 +381,6 @@ export function BusinessManagement({ user, activeSubModule, onSubModuleChange }:
                               </Badge>
                             </div>
                           </TableCell>
-                          <TableCell>{order.operator}</TableCell>
-                          <TableCell>{order.salesperson}</TableCell>
                           <TableCell>
                             <div className="flex gap-1">
                               <Button variant="ghost" size="sm">

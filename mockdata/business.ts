@@ -56,14 +56,14 @@ export const businessModules = [
     stats: { pending: 8, completed: 15, total: 23 }
   },
   {
-    id: 'sales',
-    title: '销售管理',
-    description: '管理销售订单、客户关系和销售流程',
+    id: 'department',
+    title: '部门管理',
+    description: '管理公司部门、员工配置和组织架构',
     icon: DollarSign,
     color: 'text-green-600',
     bgColor: 'bg-green-50',
     borderColor: 'border-green-200',
-    stats: { pending: 5, completed: 18, total: 23 }
+    stats: { total: 8, active: 7, employees: 156 }
   },
   {
     id: 'workflow',
@@ -90,7 +90,7 @@ export const businessModules = [
 // 最近动态数据
 export const recentActivities = [
   { type: '采购', content: 'PO-2024-001 已审批通过', time: '10分钟前', status: 'approved' },
-  { type: '销售', content: 'SO-2024-015 已完成发货', time: '30分钟前', status: 'shipped' },
+  { type: '部门', content: '新增技术部，负责人：张三', time: '30分钟前', status: 'created' },
   { type: '审批', content: '新增采购审批流程模板', time: '1小时前', status: 'created' },
   { type: '报损', content: 'DMG-2024-005 报损申请已提交', time: '2小时前', status: 'pending' }
 ];
@@ -118,21 +118,97 @@ export const businessStats = [
       icon: ShoppingCart,
     },
     {
-      title: '本月销售',
-      value: '¥76,330',
-      description: '+8.2% 较上月',
+      title: '部门总数',
+      value: '8',
+      description: '个部门',
       icon: DollarSign,
     },
     {
-      title: '待审批',
-      value: '8',
-      description: '采购单待处理',
+      title: '员工总数',
+      value: '156',
+      description: '名员工',
       icon: Clock,
     },
     {
-      title: '已完成',
-      value: '25',
-      description: '本月订单',
+      title: '活跃部门',
+      value: '7',
+      description: '个部门活跃',
       icon: CheckCircle,
+    }
+];
+
+// 部门数据
+export const departments = [
+    {
+      id: 'dept-001',
+      name: '技术部',
+      code: 'TECH',
+      manager: '张三',
+      employeeCount: 25,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-002',
+      name: '销售部',
+      code: 'SALES',
+      manager: '李四',
+      employeeCount: 18,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-003',
+      name: '采购部',
+      code: 'PURCH',
+      manager: '王五',
+      employeeCount: 12,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-004',
+      name: '财务部',
+      code: 'FIN',
+      manager: '赵六',
+      employeeCount: 8,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-005',
+      name: '人力资源部',
+      code: 'HR',
+      manager: '钱七',
+      employeeCount: 6,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-006',
+      name: '仓库部',
+      code: 'WH',
+      manager: '孙八',
+      employeeCount: 15,
+      status: 'active',
+      createdAt: '2024-01-15'
+    },
+    {
+      id: 'dept-007',
+      name: '质量部',
+      code: 'QA',
+      manager: '周九',
+      employeeCount: 10,
+      status: 'pending',
+      createdAt: '2024-02-01'
+    },
+    {
+      id: 'dept-008',
+      name: '行政部',
+      code: 'ADMIN',
+      manager: '吴十',
+      employeeCount: 5,
+      status: 'pending',
+      createdAt: '2024-02-15'
     }
 ];

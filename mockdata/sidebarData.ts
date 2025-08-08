@@ -49,11 +49,11 @@ export const menuItems = [
     id: 'business',
     label: '业务管理',
     icon: ShoppingCart,
-    description: '采购/销售/审批/报损',
+    description: '采购/部门/审批/报损',
     badge: '4',
     subItems: [
       { id: 'purchase', label: '采购管理', icon: ShoppingCart },
-      { id: 'sales', label: '销售管理', icon: DollarSign },
+      { id: 'department', label: '部门管理', icon: DollarSign },
       { id: 'workflow', label: '审批流程', icon: FileText },
       { id: 'business-damage', label: '报损管理', icon: AlertTriangle }
     ]

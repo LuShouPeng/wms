@@ -13,7 +13,7 @@ import { InventoryManagementPage } from './components/pages/warehouse/InventoryM
 import { BusinessManagement } from './components/pages/business/BusinessManagement';
 import { BusinessHomePage } from './components/pages/business/BusinessHomePage';
 import { PurchaseManagementPage } from './components/pages/business/PurchaseManagementPage';
-import { SalesManagementPage } from './components/pages/business/SalesManagementPage';
+import { DepartmentManagementPage } from './components/pages/business/DepartmentManagementPage';
 import { WorkflowManagementPage } from './components/pages/business/WorkflowManagementPage';
 import { BusinessDamagePage } from './components/pages/business/BusinessDamagePage';
 import { ReportsHomePage } from './components/pages/reports/ReportsHomePage';
@@ -173,7 +173,7 @@ export default function App() {
           <Route path="business">
             <Route index element={<BusinessHomePage />} />
             <Route path="purchase" element={<PurchaseManagementPage />} />
-            <Route path="sales" element={<SalesManagementPage />} />
+            <Route path="department" element={<DepartmentManagementPage />} />
             <Route path="workflow" element={<WorkflowManagementPage />} />
             <Route path="business-damage" element={<BusinessDamagePage />} />
           </Route>
