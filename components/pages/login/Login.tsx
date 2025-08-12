@@ -181,6 +181,7 @@ export function Login({ onLogin }: LoginProps) {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800 mb-2">测试账户：</p>
             <div className="text-xs text-blue-600 space-y-1">
+              <div className="font-semibold text-blue-700">总管理员: superadmin / super123</div>
               <div>管理员: admin / admin123</div>
               <div>仓库员: warehouse / wh123</div>
               <div>采购员: purchase / pur123</div>
