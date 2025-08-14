@@ -45,6 +45,11 @@ export function Sidebar({ activeModule, onModuleChange, user, collapsed = false 
       return false;
     }
     
+    // 总管理员有所有权限（包括赋权功能）
+    if (user.role === '总管理员') {
+      return true;
+    }
+    
     // 超级管理员有所有权限
     if (user.role === '超级管理员') {
       return true;

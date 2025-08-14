@@ -1,6 +1,17 @@
 // 系统设置模拟数据
 export const mockUsers = [
   {
+    id: 'U000',
+    username: 'superadmin',
+    name: '总管理员',
+    role: '总管理员',
+    department: '总部',
+    email: 'superadmin@company.com',
+    phone: '13888888888',
+    status: 'active',
+    lastLogin: '2024-01-15 11:00'
+  },
+  {
     id: 'U001',
     username: 'admin',
     name: '系统管理员',
@@ -58,6 +69,14 @@ export const mockUsers = [
 ];
 
 export const mockRoles = [
+  {
+    id: 'R000',
+    name: '总管理员',
+    description: '拥有系统所有权限，可为不同门店的管理员赋权',
+    permissions: 16,
+    userCount: 1,
+    status: 'active'
+  },
   {
     id: 'R001',
     name: '超级管理员',
